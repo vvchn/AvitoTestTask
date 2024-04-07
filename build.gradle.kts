@@ -4,4 +4,5 @@ plugins {
     alias(libs.plugins.gradle.secrets) apply false
     alias(libs.plugins.jetbrainsKotlinAndroid) apply false
     alias(libs.plugins.kotlinx.serialization) apply false
+    alias(libs.plugins.androidLibrary) apply false
 }

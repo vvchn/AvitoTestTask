@@ -21,3 +21,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "AvitoTestTask"
 include(":app")
+include(":data")
