@@ -1,4 +1,4 @@
-package com.vvchn.avitotesttask.ui.theme
+package com.vvchn.avitotesttask.presentation.ui.theme
 
 import android.app.Activity
 import android.os.Build
