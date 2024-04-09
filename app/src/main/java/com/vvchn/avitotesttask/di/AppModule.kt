@@ -1,11 +1,12 @@
 package com.vvchn.avitotesttask.di
 
+import com.google.gson.GsonBuilder
 import com.vvchn.avitotesttask.BuildConfig
 import com.vvchn.avitotesttask.common.ApiKeyInterceptor
 import com.vvchn.avitotesttask.common.Constants
 import com.vvchn.avitotesttask.data.api.KinopoiskApi
-import com.vvchn.avitotesttask.domain.repository.KinopoiskRepository
 import com.vvchn.avitotesttask.data.repository.KinopoiskRepositoryImpl
+import com.vvchn.avitotesttask.domain.repository.KinopoiskRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -26,10 +27,15 @@ object AppModule {
 
         val modifierOkhttpClient: OkHttpClient = OkHttpClient().newBuilder().addInterceptor(ApiKeyInterceptor(BuildConfig.API_KEY)).build()
 
+        /** TODO
+        val gson = GsonBuilder()
+            .setLenient()
+            .create()*/
+
         return Retrofit.Builder()
             .baseUrl(Constants.BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create())
             .client(modifierOkhttpClient)
+            .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(KinopoiskApi::class.java)
     }

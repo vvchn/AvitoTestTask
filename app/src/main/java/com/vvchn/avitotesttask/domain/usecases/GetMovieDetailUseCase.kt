@@ -1,12 +1,14 @@
 package com.vvchn.avitotesttask.domain.usecases
 
-import com.vvchn.avitotesttask.common.IOExceptionMessage
+import com.vvchn.avitotesttask.common.Constants.IOExceptionMessage
+import com.vvchn.avitotesttask.common.Constants.httpExceptionMessage
 import com.vvchn.avitotesttask.common.Resource
-import com.vvchn.avitotesttask.common.httpExceptionMessage
 import com.vvchn.avitotesttask.domain.models.Movie
 import com.vvchn.avitotesttask.domain.repository.KinopoiskRepository
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import retrofit2.HttpException
 import java.io.IOException
 import javax.inject.Inject
@@ -26,5 +28,5 @@ class GetMovieDetailUseCase @Inject constructor(
         catch (e: IOException) {
             emit(Resource.Error(e.localizedMessage ?: IOExceptionMessage))
         }
-    }
+    }.flowOn(Dispatchers.IO)
 }

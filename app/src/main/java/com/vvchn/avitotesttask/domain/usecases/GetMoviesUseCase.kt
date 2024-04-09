@@ -1,13 +1,14 @@
 package com.vvchn.avitotesttask.domain.usecases
 
-import com.vvchn.avitotesttask.common.IOExceptionMessage
+import com.vvchn.avitotesttask.common.Constants.IOExceptionMessage
+import com.vvchn.avitotesttask.common.Constants.httpExceptionMessage
 import com.vvchn.avitotesttask.common.Resource
-import com.vvchn.avitotesttask.common.httpExceptionMessage
-import com.vvchn.avitotesttask.data.api.dtos.toMovie
 import com.vvchn.avitotesttask.domain.models.Movie
 import com.vvchn.avitotesttask.domain.repository.KinopoiskRepository
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import retrofit2.HttpException
 import java.io.IOException
 import javax.inject.Inject
@@ -16,23 +17,23 @@ class GetMoviesUseCase @Inject constructor(
     private val repository: KinopoiskRepository
 ) {
     operator fun invoke(
-        page: Int?,
-        limit: Int?,
-        selectFields: Map<String, List<String>>?,
-        notNullFields: Map<String, List<String>>?,
-        sortField: Map<String, List<String>>?,
-        sortType: Map<String, List<String>>?,
-        id: Map<String, List<String>>?,
-        type: Map<String, List<String>>?,
-        typeNumber: Map<String, List<String>>?,
-        isSeries: Boolean?,
-        status: Map<String, List<String>>?,
-        year: Map<String, List<String>>?,
-        ratingKp: Map<String, List<String>>?,
-        ageRating: Map<String, List<String>>?,
-        genresName: Map<String, List<String>>?,
-        countriesName: Map<String, List<String>>?,
-        networksItemsName: Map<String, List<String>>?
+        page: Int? = null,
+        limit: Int? = null,
+        selectFields: Map<String, List<String>>? = null,
+        notNullFields: Map<String, List<String>>? = null,
+        sortField: Map<String, List<String>>? = null,
+        sortType: Map<String, List<String>>? = null,
+        id: Map<String, List<String>>? = null,
+        type: Map<String, List<String>>? = null,
+        typeNumber: Map<String, List<String>>? = null,
+        isSeries: Boolean? = null,
+        status: Map<String, List<String>>? = null,
+        year: Map<String, List<String>>? = null,
+        ratingKp: Map<String, List<String>>? = null,
+        ageRating: Map<String, List<String>>? = null,
+        genresName: Map<String, List<String>>? = null,
+        countriesName: Map<String, List<String>>? = null,
+        networksItemsName: Map<String, List<String>>? = null,
     ): Flow<Resource<List<Movie>>> = flow {
         try {
             emit(Resource.Loading())
@@ -63,5 +64,5 @@ class GetMoviesUseCase @Inject constructor(
         catch (e: IOException) {
             emit(Resource.Error(e.localizedMessage ?: IOExceptionMessage))
         }
-    }
+    }.flowOn(Dispatchers.IO)
 }

@@ -9,7 +9,7 @@ data class Movie(
     val movieLength: Int?,
     val name: String?,
     val moviePoster: MoviePoster?,
-    val ratingKP: Rating,
+    val ratingKP: Rating?,
     val ratingMpaa: String?,
     val seriesLength: Int?,
     val shortDescription: String?,
