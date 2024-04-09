@@ -30,7 +30,7 @@ class SearchMoviesUseCase @Inject constructor(
             )
             emit(Resource.Success(movies))
         } catch (e: HttpException) {
-            emit(Resource.Error(e.localizedMessage ?: (httpExceptionMessage + "${e.code()}")))
+            emit(Resource.Error(e.localizedMessage?.let { ": ${e.code()}" } ?: (httpExceptionMessage + "${e.code()}")))
         } catch (e: IOException) {
             emit(Resource.Error(e.localizedMessage ?: IOExceptionMessage))
         }

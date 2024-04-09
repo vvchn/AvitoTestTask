@@ -19,21 +19,21 @@ class GetMoviesUseCase @Inject constructor(
     operator fun invoke(
         page: Int? = null,
         limit: Int? = null,
-        selectFields: Map<String, List<String>>? = null,
-        notNullFields: Map<String, List<String>>? = null,
-        sortField: Map<String, List<String>>? = null,
-        sortType: Map<String, List<String>>? = null,
-        id: Map<String, List<String>>? = null,
-        type: Map<String, List<String>>? = null,
-        typeNumber: Map<String, List<String>>? = null,
+        selectFields: Map<String, List<String>>? = emptyMap(),
+        notNullFields: Map<String, List<String>>? = emptyMap(),
+        sortField: Map<String, List<String>>? = emptyMap(),
+        sortType: Map<String, List<String>>? = emptyMap(),
+        id: Map<String, List<String>>? = emptyMap(),
+        type: Map<String, List<String>>? = emptyMap(),
+        typeNumber: Map<String, List<String>>? = emptyMap(),
         isSeries: Boolean? = null,
-        status: Map<String, List<String>>? = null,
-        year: Map<String, List<String>>? = null,
-        ratingKp: Map<String, List<String>>? = null,
-        ageRating: Map<String, List<String>>? = null,
-        genresName: Map<String, List<String>>? = null,
-        countriesName: Map<String, List<String>>? = null,
-        networksItemsName: Map<String, List<String>>? = null,
+        status: Map<String, List<String>>? = emptyMap(),
+        year: Map<String, List<String>>? = emptyMap(),
+        ratingKp: Map<String, List<String>>? = emptyMap(),
+        ageRating: Map<String, List<String>>? = emptyMap(),
+        genresName: Map<String, List<String>>? = emptyMap(),
+        countriesName: Map<String, List<String>>? = emptyMap(),
+        networksItemsName: Map<String, List<String>>? = emptyMap(),
     ): Flow<Resource<List<Movie>>> = flow {
         try {
             emit(Resource.Loading())
@@ -59,7 +59,7 @@ class GetMoviesUseCase @Inject constructor(
             emit(Resource.Success(movie))
         }
         catch (e: HttpException) {
-            emit(Resource.Error(e.localizedMessage ?: (httpExceptionMessage + "${e.code()}")))
+            emit(Resource.Error(e.localizedMessage?.let { ": ${e.code()}" } ?: (httpExceptionMessage + "${e.code()}")))
         }
         catch (e: IOException) {
             emit(Resource.Error(e.localizedMessage ?: IOExceptionMessage))
