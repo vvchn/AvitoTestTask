@@ -1,9 +1,9 @@
 package com.vvchn.avitotesttask.data.api
 
-import com.vvchn.avitotesttask.data.api.dtos.Movie
-import com.vvchn.avitotesttask.data.api.dtos.Poster
-import com.vvchn.avitotesttask.data.api.dtos.Review
-import com.vvchn.avitotesttask.data.api.dtos.Studio
+import com.vvchn.avitotesttask.data.api.dtos.MovieDto
+import com.vvchn.avitotesttask.data.api.dtos.PosterDto
+import com.vvchn.avitotesttask.data.api.dtos.ReviewDto
+import com.vvchn.avitotesttask.data.api.dtos.StudioDto
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -12,9 +12,9 @@ import retrofit2.http.QueryMap
 interface KinopoiskApi {
 
     @GET("/movie/{id}")
-    suspend fun getMovieDetailByID(
+    suspend fun getMovieDetail(
         @Path("id") id: Int? = null,
-    ): Movie
+    ): MovieDto
 
     @GET("/movie")
     suspend fun getMovies(
@@ -35,14 +35,14 @@ interface KinopoiskApi {
         @QueryMap genresName: Map<String, List<String>>? = null,
         @QueryMap countriesName: Map<String, List<String>>? = null,
         @QueryMap networksItemsName: Map<String, List<String>>? = null,
-    ): List<Movie>
+    ): List<MovieDto>
 
     @GET("/movie/search")
     suspend fun searchMovies(
         @Query("page") page: Int? = null,
         @Query("limit") limit: Int? = null,
         @Query("query") query: String,
-    ): List<Movie>
+    ): List<MovieDto>
 
     @GET("/review")
     suspend fun getReviewsByMovieID(
@@ -54,7 +54,7 @@ interface KinopoiskApi {
         @QueryMap sortType: Map<String, List<String>>? = null,
         @QueryMap movieId: Map<String, List<String>>? = null,
         @QueryMap type: Map<String, List<String>>? = null,
-    ): List<Review>
+    ): List<ReviewDto>
 
     @GET("/studio")
     suspend fun getMovieProductionCompanies(
@@ -67,7 +67,7 @@ interface KinopoiskApi {
         @QueryMap movieId: Map<String, List<String>>? = null,
         @QueryMap type: Map<String, List<String>>? = null,
         @QueryMap subType: Map<String, List<String>>? = null,
-    ): List<Studio>
+    ): List<StudioDto>
 
     @GET("/image")
     suspend fun getPosters(
@@ -79,5 +79,5 @@ interface KinopoiskApi {
         @QueryMap sortType: Map<String, List<String>>? = null,
         @QueryMap movieId: Map<String, List<String>>? = null,
         @QueryMap type: Map<String, List<String>>? = null,
-    ): List<Poster>
+    ): List<PosterDto>
 }

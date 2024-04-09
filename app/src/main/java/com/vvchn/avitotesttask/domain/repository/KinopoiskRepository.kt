@@ -1,16 +1,15 @@
-package com.vvchn.avitotesttask.data.repository
+package com.vvchn.avitotesttask.domain.repository
 
-import com.vvchn.avitotesttask.data.api.dtos.Movie
-import com.vvchn.avitotesttask.data.api.dtos.Poster
-import com.vvchn.avitotesttask.data.api.dtos.Review
-import com.vvchn.avitotesttask.data.api.dtos.Studio
-import kotlinx.coroutines.flow.Flow
+import com.vvchn.avitotesttask.domain.models.Movie
+import com.vvchn.avitotesttask.domain.models.Poster
+import com.vvchn.avitotesttask.domain.models.Review
+import com.vvchn.avitotesttask.domain.models.Studio
 
 interface KinopoiskRepository {
 
-    suspend fun getMovieDetailByID(
+    suspend fun getMovieDetail(
         id: Int? = null,
-    ): Flow<Movie>
+    ): Movie
 
     suspend fun getMovies(
         page: Int? = null,
@@ -30,13 +29,13 @@ interface KinopoiskRepository {
         genresName: Map<String, List<String>>? = null,
         countriesName: Map<String, List<String>>? = null,
         networksItemsName: Map<String, List<String>>? = null,
-    ): Flow<List<Movie>>
+    ): List<Movie>
 
     suspend fun searchMovies(
         page: Int? = null,
         limit: Int? = null,
         query: String,
-    ): Flow<List<Movie>>
+    ): List<Movie>
 
     suspend fun getReviewsByMovieID(
         page: Int? = null,
@@ -47,7 +46,7 @@ interface KinopoiskRepository {
         sortType: Map<String, List<String>>? = null,
         movieId: Map<String, List<String>>? = null,
         type: Map<String, List<String>>? = null,
-    ): Flow<List<Review>>
+    ): List<Review>
 
 
     suspend fun getMovieProductionCompanies(
@@ -60,7 +59,7 @@ interface KinopoiskRepository {
         movieId: Map<String, List<String>>? = null,
         type: Map<String, List<String>>? = null,
         subType: Map<String, List<String>>? = null,
-    ): Flow<List<Studio>>
+    ): List<Studio>
 
     suspend fun getPosters(
         page: Int? = null,
@@ -71,5 +70,5 @@ interface KinopoiskRepository {
         sortType: Map<String, List<String>>? = null,
         movieId: Map<String, List<String>>? = null,
         type: Map<String, List<String>>? = null,
-    ): Flow<List<Poster>>
+    ): List<Poster>
 }

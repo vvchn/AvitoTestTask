@@ -4,7 +4,7 @@ import com.vvchn.avitotesttask.BuildConfig
 import com.vvchn.avitotesttask.common.ApiKeyInterceptor
 import com.vvchn.avitotesttask.common.Constants
 import com.vvchn.avitotesttask.data.api.KinopoiskApi
-import com.vvchn.avitotesttask.data.repository.KinopoiskRepository
+import com.vvchn.avitotesttask.domain.repository.KinopoiskRepository
 import com.vvchn.avitotesttask.data.repository.KinopoiskRepositoryImpl
 import dagger.Module
 import dagger.Provides
