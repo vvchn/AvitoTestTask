@@ -1,8 +1,6 @@
 package com.vvchn.avitotesttask.data.repository
 
 import com.vvchn.avitotesttask.data.api.KinopoiskApi
-import com.vvchn.avitotesttask.data.api.dtos.PosterDto
-import com.vvchn.avitotesttask.data.api.dtos.StudioDto
 import com.vvchn.avitotesttask.data.api.dtos.toMovie
 import com.vvchn.avitotesttask.data.api.dtos.toPoster
 import com.vvchn.avitotesttask.data.api.dtos.toReview
