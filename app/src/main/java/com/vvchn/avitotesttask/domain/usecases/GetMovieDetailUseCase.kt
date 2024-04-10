@@ -6,9 +6,11 @@ import com.vvchn.avitotesttask.common.Resource
 import com.vvchn.avitotesttask.domain.models.Movie
 import com.vvchn.avitotesttask.domain.repository.KinopoiskRepository
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.job
 import retrofit2.HttpException
 import java.io.IOException
 import javax.inject.Inject
@@ -21,12 +23,13 @@ class GetMovieDetailUseCase @Inject constructor(
             emit(Resource.Loading())
             val movie = repository.getMovieDetail(id = id)
             emit(Resource.Success(movie))
-        }
-        catch (e: HttpException) {
-            emit(Resource.Error(e.localizedMessage?.let { ": ${e.code()}" } ?: (httpExceptionMessage + "${e.code()}")))
-        }
-        catch (e: IOException) {
+        } catch (e: HttpException) {
+            emit(Resource.Error(e.localizedMessage?.let { ": ${e.code()}" }
+                ?: (httpExceptionMessage + "${e.code()}")))
+        } catch (e: IOException) {
             emit(Resource.Error(e.localizedMessage ?: IOExceptionMessage))
+        } catch (e: Exception) {
+            emit(Resource.Error(e.localizedMessage ?: "Something goes wrong."))
         }
     }.flowOn(Dispatchers.IO)
 }

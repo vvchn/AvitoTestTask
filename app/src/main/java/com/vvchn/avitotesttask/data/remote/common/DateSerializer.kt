@@ -1,4 +1,4 @@
-package com.vvchn.data.common
+package com.vvchn.avitotesttask.data.remote.common
 
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.descriptors.PrimitiveKind

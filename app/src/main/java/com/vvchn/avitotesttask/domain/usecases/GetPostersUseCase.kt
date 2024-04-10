@@ -17,30 +17,21 @@ class GetPostersUseCase @Inject constructor(
     private val repository: KinopoiskRepository
 ) {
     operator fun invoke(
-        page: Int?,
-        limit: Int?,
-        selectFields: Map<String, List<String>>?,
-        notNullFields: Map<String, List<String>>?,
-        sortField: Map<String, List<String>>?,
-        sortType: Map<String, List<String>>?,
-        movieId: Map<String, List<String>>?,
-        type: Map<String, List<String>>?
+        page: Int,
+        limit: Int,
+        params: Map<String, List<String>>?,
     ): Flow<Resource<List<Poster>>> = flow {
         try {
             emit(Resource.Loading())
             val posters = repository.getPosters(
                 page = page,
                 limit = limit,
-                selectFields = selectFields,
-                notNullFields = notNullFields,
-                sortField = sortField,
-                sortType = sortType,
-                movieId = movieId,
-                type = type,
+                params = params,
             )
             emit(Resource.Success(posters))
         } catch (e: HttpException) {
-            emit(Resource.Error(e.localizedMessage?.let { ": ${e.code()}" } ?: (httpExceptionMessage + "${e.code()}")))
+            emit(Resource.Error(e.localizedMessage?.let { ": ${e.code()}" }
+                ?: (httpExceptionMessage + "${e.code()}")))
         } catch (e: IOException) {
             emit(Resource.Error(e.localizedMessage ?: IOExceptionMessage))
         }

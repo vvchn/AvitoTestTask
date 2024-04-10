@@ -2,14 +2,19 @@ package com.vvchn.avitotesttask.di
 
 import com.vvchn.avitotesttask.BuildConfig
 import com.vvchn.avitotesttask.common.ApiKeyInterceptor
-import com.vvchn.avitotesttask.data.api.KinopoiskApi
-import com.vvchn.avitotesttask.data.repository.KinopoiskRepositoryImpl
+import com.vvchn.avitotesttask.data.remote.api.KinopoiskApi
+import com.vvchn.avitotesttask.data.remote.repository.KinopoiskRepositoryImpl
 import com.vvchn.avitotesttask.domain.repository.KinopoiskRepository
+import com.vvchn.avitotesttask.domain.usecases.GetMovieDetailUseCase
+import com.vvchn.avitotesttask.domain.usecases.GetMovieProductionCompaniesUseCase
+import com.vvchn.avitotesttask.domain.usecases.GetMoviesUseCase
+import com.vvchn.avitotesttask.domain.usecases.GetPostersUseCase
+import com.vvchn.avitotesttask.domain.usecases.GetReviewsByMovieIDUseCase
+import com.vvchn.avitotesttask.domain.usecases.SearchMoviesUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -47,5 +52,38 @@ object AppModule {
     @Singleton
     fun provideKinopoiskRepository(api: KinopoiskApi): KinopoiskRepository {
         return KinopoiskRepositoryImpl(api)
+    }
+
+
+    @Provides
+    @Singleton
+    fun provideGetMovieDetailUseCase(repository: KinopoiskRepository): GetMovieDetailUseCase {
+        return GetMovieDetailUseCase(repository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGetMovieProductionCompaniesUseCase(repository: KinopoiskRepository): GetMovieProductionCompaniesUseCase {
+        return GetMovieProductionCompaniesUseCase(repository)
+    }
+    @Provides
+    @Singleton
+    fun provideGetMoviesUseCase(repository: KinopoiskRepository): GetMoviesUseCase {
+        return GetMoviesUseCase(repository)
+    }
+    @Provides
+    @Singleton
+    fun provideGetPostersUseCase(repository: KinopoiskRepository): GetPostersUseCase {
+        return GetPostersUseCase(repository)
+    }
+    @Provides
+    @Singleton
+    fun provideGetReviewsByMovieIDUseCase(repository: KinopoiskRepository): GetReviewsByMovieIDUseCase {
+        return GetReviewsByMovieIDUseCase(repository)
+    }
+    @Provides
+    @Singleton
+    fun provideSearchMoviesUseCase(repository: KinopoiskRepository): SearchMoviesUseCase {
+        return SearchMoviesUseCase(repository)
     }
 }

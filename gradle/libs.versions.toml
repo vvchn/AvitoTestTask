@@ -25,6 +25,8 @@ material = "1.11.0"
 #jetbrainsKotlinJvm = "1.9.22"
 secrets = "2.0.1"
 
+paging = "3.2.1"
+
 [libraries]
 androidx-room = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
 androidx-room-annotation-processor = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
@@ -64,6 +66,10 @@ hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 
+paging = { group = "androidx.paging", name = "paging-runtime", version.ref = "paging" }
+paging-ktx = { group = "androidx.paging", name = "paging-runtime-ktx", version.ref = "paging" }
+paging-compose = { group = "androidx.paging", name = "paging-compose", version.ref = "paging"}
+
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
 androidLibrary = { id = "com.android.library", version.ref = "agp" }
@@ -81,6 +87,12 @@ retrofit = [
     "retrofit-converter",
     "google-gson",
     "retrofit-adapters-result",
+]
+
+paging = [
+    "paging",
+    "paging-ktx",
+    "paging-compose"
 ]
 
 room = [
