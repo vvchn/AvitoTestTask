@@ -1,7 +1,7 @@
 package com.vvchn.avitotesttask.domain.models
 
 data class Poster(
-    val docs: List<PosterInfo>?,
+    val docs: List<PosterInfo>,
     val limit: Int?,
     val page: Int?,
     val pages: Int?,

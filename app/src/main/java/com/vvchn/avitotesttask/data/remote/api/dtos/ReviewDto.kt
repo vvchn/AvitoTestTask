@@ -6,11 +6,11 @@ import kotlinx.serialization.Serializable
 import java.util.Date
 
 data class ReviewDto(
-    @SerializedName("docs") val docs: List<ReviewInfoDto>?,
-    @SerializedName("limit") val limit: Int?,
-    @SerializedName("page") val page: Int?,
-    @SerializedName("pages") val pages: Int?,
-    @SerializedName("total") val total: Int?,
+    @SerializedName("docs") val docs: List<ReviewInfoDto>,
+    @SerializedName("limit") val limit: Int,
+    @SerializedName("page") val page: Int,
+    @SerializedName("pages") val pages: Int,
+    @SerializedName("total") val total: Int,
 )
 
 data class ReviewInfoDto(

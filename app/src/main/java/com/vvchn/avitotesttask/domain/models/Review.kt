@@ -3,7 +3,7 @@ package com.vvchn.avitotesttask.domain.models
 import java.util.Date
 
 data class Review(
-    val docs: List<ReviewInfo>?,
+    val docs: List<ReviewInfo>,
     val limit: Int?,
     val page: Int?,
     val pages: Int?,

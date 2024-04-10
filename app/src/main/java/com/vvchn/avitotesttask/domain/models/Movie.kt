@@ -1,6 +1,16 @@
 package com.vvchn.avitotesttask.domain.models
 
+import com.google.gson.annotations.SerializedName
+
 data class Movie(
+    val docs: List<MovieInfo>,
+    val limit: Int?,
+    val page: Int?,
+    val pages: Int?,
+    val total: Int?,
+)
+
+data class MovieInfo(
     val ageRating: Int?,
     val alternativeName: String?,
     val countries: List<Country>?,

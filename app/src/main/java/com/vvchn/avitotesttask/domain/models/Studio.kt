@@ -1,7 +1,7 @@
 package com.vvchn.avitotesttask.domain.models
 
 data class Studio(
-    val docs: List<StudioInfo>?,
+    val docs: List<StudioInfo>,
     val limit: Int?,
     val page: Int?,
     val pages: Int?,

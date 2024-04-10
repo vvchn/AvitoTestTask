@@ -3,6 +3,7 @@ package com.vvchn.avitotesttask.data.remote.common
 import com.vvchn.avitotesttask.data.remote.api.dtos.CountryDto
 import com.vvchn.avitotesttask.data.remote.api.dtos.GenresDto
 import com.vvchn.avitotesttask.data.remote.api.dtos.MovieDto
+import com.vvchn.avitotesttask.data.remote.api.dtos.MovieInfoDto
 import com.vvchn.avitotesttask.data.remote.api.dtos.MoviePosterDto
 import com.vvchn.avitotesttask.data.remote.api.dtos.PosterDto
 import com.vvchn.avitotesttask.data.remote.api.dtos.PosterInfoDto
@@ -14,6 +15,7 @@ import com.vvchn.avitotesttask.data.remote.api.dtos.StudioInfoDto
 import com.vvchn.avitotesttask.domain.models.Country
 import com.vvchn.avitotesttask.domain.models.Genres
 import com.vvchn.avitotesttask.domain.models.Movie
+import com.vvchn.avitotesttask.domain.models.MovieInfo
 import com.vvchn.avitotesttask.domain.models.MoviePoster
 import com.vvchn.avitotesttask.domain.models.Poster
 import com.vvchn.avitotesttask.domain.models.PosterInfo
@@ -48,21 +50,17 @@ private fun RatingDto.toRating(): Rating {
     )
 }
 
-internal fun MovieDto.toMovie(): Movie {
-    return Movie(
+internal fun MovieInfoDto.toMovieInfo(): MovieInfo {
+    return MovieInfo(
         ageRating = ageRating,
         alternativeName = alternativeName,
-        countries = countries?.map { countryDto ->
-            countryDto.toCountry()
-        },
-        genres = genresDto?.map { genresDto ->
-            genresDto.toGenres()
-        },
+        countries = countries?.map { countryDto -> countryDto.toCountry() },
+        genres = genres?.map { genresDto -> genresDto.toGenres() },
         id = id,
         movieLength = movieLength,
         name = name,
-        moviePoster = moviePosterDTO?.toMoviePoster(),
-        ratingKP = ratingKPDto?.toRating(),
+        moviePoster = moviePoster?.toMoviePoster(),
+        ratingKP = ratingKP?.toRating(),
         ratingMpaa = ratingMpaa,
         seriesLength = seriesLength,
         shortDescription = shortDescription,
@@ -72,7 +70,17 @@ internal fun MovieDto.toMovie(): Movie {
     )
 }
 
-private fun PosterInfoDto.toPosterInfo(): PosterInfo {
+internal fun MovieDto.toMovie(): Movie {
+    return Movie(
+        docs = docs.map { movieInfoDto -> movieInfoDto.toMovieInfo() },
+        limit = limit,
+        page = page,
+        pages = pages,
+        total = total,
+    )
+}
+
+internal fun PosterInfoDto.toPosterInfo(): PosterInfo {
     return PosterInfo(
         height = height,
         movieId = movieId,
@@ -84,7 +92,7 @@ private fun PosterInfoDto.toPosterInfo(): PosterInfo {
 
 internal fun PosterDto.toPoster(): Poster {
     return Poster(
-        docs = docs?.map { posterInfoDto ->
+        docs = docs.map { posterInfoDto ->
             posterInfoDto.toPosterInfo()
         },
         limit = limit,
@@ -94,7 +102,7 @@ internal fun PosterDto.toPoster(): Poster {
     )
 }
 
-private fun ReviewInfoDto.toReviewInfo(): ReviewInfo {
+internal fun ReviewInfoDto.toReviewInfo(): ReviewInfo {
     return ReviewInfo(
         author = author,
         date = date,
@@ -106,7 +114,7 @@ private fun ReviewInfoDto.toReviewInfo(): ReviewInfo {
 
 internal fun ReviewDto.toReview(): Review {
     return Review(
-        docs = docs?.map { reviewDto ->
+        docs = docs.map { reviewDto ->
             reviewDto.toReviewInfo()
         },
         limit = limit,
@@ -116,7 +124,7 @@ internal fun ReviewDto.toReview(): Review {
     )
 }
 
-private fun StudioInfoDto.toStudioInfo(): StudioInfo {
+internal fun StudioInfoDto.toStudioInfo(): StudioInfo {
     return StudioInfo(
         id = id,
         subType = subType,
@@ -127,7 +135,7 @@ private fun StudioInfoDto.toStudioInfo(): StudioInfo {
 
 internal fun StudioDto.toStudio(): Studio {
     return Studio(
-        docs = docs?.map { studioInfoDto ->
+        docs = docs.map { studioInfoDto ->
             studioInfoDto.toStudioInfo()
         },
         limit = limit,

@@ -3,14 +3,12 @@ package com.vvchn.avitotesttask.domain.usecases
 import com.vvchn.avitotesttask.common.Constants.IOExceptionMessage
 import com.vvchn.avitotesttask.common.Constants.httpExceptionMessage
 import com.vvchn.avitotesttask.common.Resource
-import com.vvchn.avitotesttask.domain.models.Movie
+import com.vvchn.avitotesttask.domain.models.MovieInfo
 import com.vvchn.avitotesttask.domain.repository.KinopoiskRepository
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.job
 import retrofit2.HttpException
 import java.io.IOException
 import javax.inject.Inject
@@ -18,7 +16,7 @@ import javax.inject.Inject
 class GetMovieDetailUseCase @Inject constructor(
     private val repository: KinopoiskRepository
 ) {
-    operator fun invoke(id: Int): Flow<Resource<Movie>> = flow {
+    operator fun invoke(id: Int): Flow<Resource<MovieInfo>> = flow {
         try {
             emit(Resource.Loading())
             val movie = repository.getMovieDetail(id = id)

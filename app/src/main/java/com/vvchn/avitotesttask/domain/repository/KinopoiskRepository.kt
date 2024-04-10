@@ -1,44 +1,45 @@
 package com.vvchn.avitotesttask.domain.repository
 
-import com.vvchn.avitotesttask.domain.models.Movie
-import com.vvchn.avitotesttask.domain.models.Poster
-import com.vvchn.avitotesttask.domain.models.Review
-import com.vvchn.avitotesttask.domain.models.Studio
+import androidx.paging.PagingData
+import com.vvchn.avitotesttask.domain.models.MovieInfo
+import com.vvchn.avitotesttask.domain.models.PosterInfo
+import com.vvchn.avitotesttask.domain.models.ReviewInfo
+import com.vvchn.avitotesttask.domain.models.StudioInfo
+import kotlinx.coroutines.flow.Flow
 
 interface KinopoiskRepository {
 
     suspend fun getMovieDetail(
         id: Int,
-    ): Movie
+    ): MovieInfo
 
-    suspend fun getMovies(
+    fun getMovies(
         page: Int,
         limit: Int,
-        isSeries: Boolean? = null,
-        params: Map<String, List<String>>?,
-    ): List<Movie>
+        queryParameters: Map<String, List<String>>?,
+    ): Flow<PagingData<MovieInfo>>
 
-    suspend fun searchMovies(
+    fun searchMovies(
         page: Int,
         limit: Int,
         query: String,
-    ): List<Movie>
+    ): Flow<PagingData<MovieInfo>>
 
-    suspend fun getReviewsByMovieID(
+    fun getReviewsByMovieID(
         page: Int,
         limit: Int,
-        params: Map<String, List<String>>?,
-    ): List<Review>
+        queryParameters: Map<String, List<String>>?,
+    ): Flow<PagingData<ReviewInfo>>
 
-    suspend fun getMovieProductionCompanies(
+    fun getMovieProductionCompanies(
         page: Int,
         limit: Int,
-        params: Map<String, List<String>>?,
-    ): List<Studio>
+        queryParameters: Map<String, List<String>>?,
+    ): Flow<PagingData<StudioInfo>>
 
-    suspend fun getPosters(
+    fun getPosters(
         page: Int,
         limit: Int,
-        params: Map<String, List<String>>?,
-    ): List<Poster>
+        queryParameters: Map<String, List<String>>?,
+    ): Flow<PagingData<PosterInfo>>
 }
