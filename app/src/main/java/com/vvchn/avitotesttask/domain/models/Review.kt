@@ -4,10 +4,10 @@ import java.util.Date
 
 data class Review(
     val docs: List<ReviewInfo>,
-    val limit: Int?,
-    val page: Int?,
-    val pages: Int?,
-    val total: Int?,
+    val limit: Int,
+    val page: Int,
+    val pages: Int,
+    val total: Int,
 )
 
 data class ReviewInfo(

@@ -1,10 +1,9 @@
-package com.vvchn.avitotesttask.presentation.main_screen
+package com.vvchn.avitotesttask.presentation.mainscreen
 
 import com.vvchn.avitotesttask.domain.models.Movie
 
-class MainScreenState(
+data class MainScreenState(
     val isLoading: Boolean = false,
-    val movies: List<Movie> = emptyList(),
     val error: String = "",
     var currentPage: Int = 1,
     val screenLimit: Int = 10,

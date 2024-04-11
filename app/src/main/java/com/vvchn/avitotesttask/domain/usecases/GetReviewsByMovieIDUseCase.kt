@@ -10,10 +10,12 @@ class GetReviewsByMovieIDUseCase @Inject constructor(
     private val repository: KinopoiskRepository
 ) {
     operator fun invoke(
-        page: Int,
         limit: Int,
         queryParameters: Map<String, List<String>>?,
     ): Flow<PagingData<ReviewInfo>> {
-        return repository.getReviewsByMovieID(page = page, limit = limit, queryParameters = queryParameters)
+        return repository.getReviewsByMovieID(
+            limit = limit,
+            queryParameters = queryParameters,
+        )
     }
 }

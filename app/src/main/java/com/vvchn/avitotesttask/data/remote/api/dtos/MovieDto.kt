@@ -4,10 +4,10 @@ import com.google.gson.annotations.SerializedName
 
 data class MovieDto(
     @SerializedName("docs") val docs: List<MovieInfoDto>,
-    @SerializedName("limit") val limit: Int?,
-    @SerializedName("page") val page: Int?,
-    @SerializedName("pages") val pages: Int?,
-    @SerializedName("total") val total: Int?,
+    @SerializedName("limit") val limit: Int,
+    @SerializedName("page") val page: Int,
+    @SerializedName("pages") val pages: Int,
+    @SerializedName("total") val total: Int,
 )
 
 data class MovieInfoDto(

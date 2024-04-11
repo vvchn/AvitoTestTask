@@ -10,10 +10,12 @@ class GetMoviesUseCase @Inject constructor(
     private val repository: KinopoiskRepository
 ) {
     operator fun invoke(
-        page: Int,
         limit: Int,
         queryParameters: Map<String, List<String>>?,
     ): Flow<PagingData<MovieInfo>> {
-        return repository.getMovies(page = page, limit = limit, queryParameters = queryParameters)
+        return repository.getMovies(
+            limit = limit,
+            queryParameters = queryParameters,
+        )
     }
 }

@@ -14,31 +14,26 @@ interface KinopoiskRepository {
     ): MovieInfo
 
     fun getMovies(
-        page: Int,
         limit: Int,
         queryParameters: Map<String, List<String>>?,
     ): Flow<PagingData<MovieInfo>>
 
     fun searchMovies(
-        page: Int,
         limit: Int,
         query: String,
     ): Flow<PagingData<MovieInfo>>
 
     fun getReviewsByMovieID(
-        page: Int,
         limit: Int,
         queryParameters: Map<String, List<String>>?,
     ): Flow<PagingData<ReviewInfo>>
 
     fun getMovieProductionCompanies(
-        page: Int,
         limit: Int,
         queryParameters: Map<String, List<String>>?,
     ): Flow<PagingData<StudioInfo>>
 
     fun getPosters(
-        page: Int,
         limit: Int,
         queryParameters: Map<String, List<String>>?,
     ): Flow<PagingData<PosterInfo>>

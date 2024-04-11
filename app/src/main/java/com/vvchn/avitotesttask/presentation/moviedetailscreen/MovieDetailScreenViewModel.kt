@@ -1,19 +1,17 @@
-package com.vvchn.avitotesttask.presentation.moviedetail_screen
+package com.vvchn.avitotesttask.presentation.moviedetailscreen
 
 import android.util.Log
-import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.paging.PagingData
-import com.vvchn.avitotesttask.common.Constants
 import com.vvchn.avitotesttask.common.Resource
 import com.vvchn.avitotesttask.domain.usecases.GetMovieDetailUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
 
@@ -22,8 +20,8 @@ class MovieDetailScreenViewModel @Inject constructor(
     private val getMovieDetailUseCase: GetMovieDetailUseCase
 ) : ViewModel() {
 
-    private val _state = mutableStateOf(MovieDetailState())
-    val state: State<MovieDetailState> = _state
+    private val _state = MutableStateFlow(MovieDetailState())
+    val state: StateFlow<MovieDetailState> = _state.asStateFlow()
 
     init {
         getMovieDetail(1252447)
@@ -33,6 +31,7 @@ class MovieDetailScreenViewModel @Inject constructor(
         getMovieDetailUseCase(id).onEach { result ->
             when (result) {
                 is Resource.Success -> {
+                    _state.update { it.copy() }
                     _state.value = MovieDetailState(movie = result.data)
                     _state.value = MovieDetailState(isLoading = false)
                     Log.d("MovieDetailScreenViewModel", "${_state.value.movie?.name}")

@@ -28,55 +28,50 @@ class KinopoiskRepositoryImpl @Inject constructor(
     override suspend fun getMovieDetail(id: Int): MovieInfo = api.getMovieDetail(id).toMovieInfo()
 
     override fun getMovies(
-        page: Int,
         limit: Int,
         queryParameters: Map<String, List<String>>?,
     ): Flow<PagingData<MovieInfo>> = Pager(
-        config = PagingConfig(pageSize = 10),
+        config = PagingConfig(pageSize = limit),
         pagingSourceFactory = {
             MoviesPagingSource(api, query = null, queryParameters)
         }
     ).flow
 
     override fun searchMovies(
-        page: Int,
         limit: Int,
         query: String
     ): Flow<PagingData<MovieInfo>> = Pager(
-        config = PagingConfig(pageSize = 10),
+        config = PagingConfig(pageSize = limit),
         pagingSourceFactory = {
             MoviesPagingSource(api, query)
         }
     ).flow
 
     override fun getReviewsByMovieID(
-        page: Int,
         limit: Int,
         queryParameters: Map<String, List<String>>?,
     ): Flow<PagingData<ReviewInfo>> = Pager(
-        config = PagingConfig(pageSize = 10),
+        config = PagingConfig(pageSize = limit),
         pagingSourceFactory = {
             ReviewsPagingSource(api, queryParameters)
         }
     ).flow
 
     override fun getMovieProductionCompanies(
-        page: Int,
         limit: Int,
         queryParameters: Map<String, List<String>>?,
     ): Flow<PagingData<StudioInfo>> = Pager(
-        config = PagingConfig(pageSize = 10),
+        config = PagingConfig(pageSize = limit),
         pagingSourceFactory = {
             StudiosPagingSource(api, queryParameters)
         }
     ).flow
 
     override fun getPosters(
-        page: Int,
         limit: Int,
         queryParameters: Map<String, List<String>>?,
     ): Flow<PagingData<PosterInfo>> = Pager(
-        config = PagingConfig(pageSize = 10),
+        config = PagingConfig(pageSize = limit),
         pagingSourceFactory = {
             PostersPagingSource(api, queryParameters)
         }

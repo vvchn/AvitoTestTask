@@ -19,6 +19,7 @@ room = "2.6.1"
 appcompat = "1.6.1"
 devtools-ksp = "1.9.22-1.0.17"
 hilt = "2.51.1"
+hiltNavigation = "1.2.0"
 jetbrainsKotlinJvm = "1.9.22"
 kotlinxCoroutines = "1.8.0"
 material = "1.11.0"
@@ -26,6 +27,7 @@ material = "1.11.0"
 secrets = "2.0.1"
 
 paging = "3.2.1"
+lifecycleViewmodelCompose = "2.7.0"
 
 [libraries]
 androidx-room = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
@@ -57,11 +59,9 @@ retrofit = { module = "com.squareup.retrofit2:retrofit", name = "retrofit", vers
 retrofit-converter = { module = "com.squareup.retrofit2:converter-gson", name = "converter-gson", version.ref = "retrofit" }
 retrofit-adapters-result = { module = "com.github.skydoves:retrofit-adapters-result", version.ref = "retrofitAdapters" }
 
-#dagger2-main = { module = "com.google.dagger:dagger", version.ref = "dagger" }
-#dagger2-compiler = { module = "com.google.dagger:dagger-compiler", version.ref = "dagger" }
-
-hilt-android-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt" }
 hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
+hilt-android-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt" }
+hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltNavigation" }
 
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
@@ -69,6 +69,7 @@ material = { group = "com.google.android.material", name = "material", version.r
 paging = { group = "androidx.paging", name = "paging-runtime", version.ref = "paging" }
 paging-ktx = { group = "androidx.paging", name = "paging-runtime-ktx", version.ref = "paging" }
 paging-compose = { group = "androidx.paging", name = "paging-compose", version.ref = "paging"}
+androidx-lifecycle-viewmodel-compose = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "lifecycleViewmodelCompose" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
@@ -89,10 +90,15 @@ retrofit = [
     "retrofit-adapters-result",
 ]
 
+hilt = [
+    "hilt-android",
+    "hilt-navigation-compose",
+]
+
 paging = [
     "paging",
     "paging-ktx",
-    "paging-compose"
+    "paging-compose",
 ]
 
 room = [
