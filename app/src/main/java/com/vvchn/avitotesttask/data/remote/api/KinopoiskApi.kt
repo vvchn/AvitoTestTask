@@ -14,11 +14,6 @@ import retrofit2.http.QueryMap
 
 interface KinopoiskApi {
 
-    @GET("/v1.4/movie/{id}")
-    suspend fun getMovieDetail(
-        @Path("id") id: Int,
-    ): MovieInfoDto
-
     @GET("/v1.4/movie")
     suspend fun getMovies(
         @Query("page") page: Int,

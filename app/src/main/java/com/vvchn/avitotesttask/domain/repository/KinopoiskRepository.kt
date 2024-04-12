@@ -9,10 +9,6 @@ import kotlinx.coroutines.flow.Flow
 
 interface KinopoiskRepository {
 
-    suspend fun getMovieDetail(
-        id: Int,
-    ): MovieInfo
-
     fun getMovies(
         limit: Int,
         queryParameters: Map<String, List<String>>?,

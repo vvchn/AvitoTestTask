@@ -18,14 +18,15 @@ import com.vvchn.avitotesttask.domain.models.ReviewInfo
 import com.vvchn.avitotesttask.domain.models.Studio
 import com.vvchn.avitotesttask.domain.models.StudioInfo
 import com.vvchn.avitotesttask.domain.repository.KinopoiskRepository
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOn
 import javax.inject.Inject
 
 
 class KinopoiskRepositoryImpl @Inject constructor(
     private val api: KinopoiskApi
 ) : KinopoiskRepository {
-    override suspend fun getMovieDetail(id: Int): MovieInfo = api.getMovieDetail(id).toMovieInfo()
 
     override fun getMovies(
         limit: Int,
