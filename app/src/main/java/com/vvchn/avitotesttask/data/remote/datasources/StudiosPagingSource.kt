@@ -28,10 +28,13 @@ class StudiosPagingSource (
         return try {
             val moviesResponse = api.getMovieProductionCompanies(page = page, limit = limit, queryParameters = queryParameters)
 
+            val nextKey = if (moviesResponse.total == 0 || moviesResponse.page == moviesResponse.pages) null else page + 1
+            val prevKey = if (page == 1) null else page - 1
+
             LoadResult.Page(
                 data = moviesResponse.docs.map { studioInfoDto -> studioInfoDto.toStudioInfo() },
-                nextKey = if (moviesResponse.page == moviesResponse.pages) null else page + 1,
-                prevKey = null
+                nextKey = nextKey,
+                prevKey = prevKey
             )
         } catch (e: Exception) {
             e.printStackTrace()
