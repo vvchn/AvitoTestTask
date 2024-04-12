@@ -4,4 +4,9 @@
     <string name="search_movie_by_name">Поиск по названию</string>
     <string name="filters">Фильтры</string>
     <string name="catalogue">Каталог</string>
+    <string name="nothing_found">Ничего не найдено</string>
+    <string name="years">Годы:</string>
+    <string name="from">С</string>
+    <string name="to">ПО</string>
+    <string name="age">Возраст:</string>
 </resources>

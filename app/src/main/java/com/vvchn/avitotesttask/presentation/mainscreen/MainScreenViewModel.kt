@@ -13,9 +13,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.cancellable
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -44,8 +44,12 @@ class MainScreenViewModel @Inject constructor(
             ).cachedIn(viewModelScope).flowOn(Dispatchers.IO)
     }
 
+    fun stopFlow() {
+        mainScreenFlow.cancellable()
+    }
+
     fun collectUserInput(str: String) {
-        _state.value.userInput = str
+        _state.value.userSearchInput = str
     }
 
     fun searchMovies(query: String) {

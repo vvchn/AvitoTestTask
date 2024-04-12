@@ -4,4 +4,9 @@
     <string name="search_movie_by_name">Search by name</string>
     <string name="filters">Filters</string>
     <string name="catalogue">Catalogue</string>
+    <string name="nothing_found">Nothing found</string>
+    <string name="years">Years:</string>
+    <string name="from">From</string>
+    <string name="to">To</string>
+    <string name="age">Age:</string>
 </resources>
