@@ -7,4 +7,6 @@ data class MainScreenState(
     val error: String = "",
     var currentPage: Int = 1,
     val screenLimit: Int = 10,
+    val queryParameters: Map<String, List<String>> = emptyMap(),
+    var userInput: String = "",
 )

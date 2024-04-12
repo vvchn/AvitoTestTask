@@ -86,4 +86,5 @@ dependencies {
 
     implementation(libs.bundles.paging)
 
+    implementation(libs.glide)
 }

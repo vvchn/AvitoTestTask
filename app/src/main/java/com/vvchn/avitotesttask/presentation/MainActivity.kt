@@ -12,9 +12,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
+import com.vvchn.avitotesttask.R
 import com.vvchn.avitotesttask.presentation.mainscreen.MainScreen
 import com.vvchn.avitotesttask.presentation.moviedetailscreen.MovieDetailScreenViewModel
 import com.vvchn.avitotesttask.presentation.ui.theme.AvitoTestTaskTheme
+import com.vvchn.avitotesttask.presentation.ui.theme.mainBackground
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -27,7 +29,7 @@ class MainActivity : ComponentActivity() {
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
-                    color = Color.White
+                    color = mainBackground,
                 ) {
                     MainScreen()
                 }

@@ -4,7 +4,6 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.vvchn.avitotesttask.common.Resource
-import com.vvchn.avitotesttask.domain.usecases.GetMovieDetailUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -16,17 +15,15 @@ import javax.inject.Inject
 
 
 @HiltViewModel
-class MovieDetailScreenViewModel @Inject constructor(
-    private val getMovieDetailUseCase: GetMovieDetailUseCase
-) : ViewModel() {
+class MovieDetailScreenViewModel @Inject constructor(): ViewModel() {
 
     private val _state = MutableStateFlow(MovieDetailState())
     val state: StateFlow<MovieDetailState> = _state.asStateFlow()
 
-    init {
+    /*init {
         getMovieDetail(1252447)
-    }
-
+    }*/
+/*
     fun getMovieDetail(id: Int) {
         getMovieDetailUseCase(id).onEach { result ->
             when (result) {
@@ -49,6 +46,6 @@ class MovieDetailScreenViewModel @Inject constructor(
                 }
             }
         }.launchIn(viewModelScope)
-    }
+    }*/
 
 }

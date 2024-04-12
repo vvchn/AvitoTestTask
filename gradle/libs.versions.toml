@@ -14,6 +14,8 @@ retrofit = "2.9.0"
 retrofitConverter = "2.10.1"
 retrofitAdapters = "1.0.9"
 
+glide = "1.0.0-beta01"
+
 room = "2.6.1"
 
 appcompat = "1.6.1"
@@ -62,6 +64,8 @@ retrofit-adapters-result = { module = "com.github.skydoves:retrofit-adapters-res
 hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
 hilt-android-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt" }
 hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltNavigation" }
+
+glide = { group = "com.github.bumptech.glide", name = "compose", version.ref = "glide" }
 
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }

@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">AvitoTestTask</string>
+    <string name="unknown">unknown</string>
+    <string name="search_movie_by_name">Search by name</string>
+    <string name="filters">Filters</string>
+    <string name="catalogue">Catalogue</string>
 </resources>
