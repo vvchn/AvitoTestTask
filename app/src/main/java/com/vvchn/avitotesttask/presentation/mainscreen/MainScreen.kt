@@ -68,6 +68,8 @@ import com.vvchn.avitotesttask.presentation.navgraph.Route
 import com.vvchn.avitotesttask.presentation.ui.theme.mainBackground
 import com.vvchn.avitotesttask.presentation.ui.theme.searchBarColor
 import com.vvchn.avitotesttask.presentation.ui.theme.topBarColor
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -75,7 +77,7 @@ import com.vvchn.avitotesttask.presentation.ui.theme.topBarColor
 fun MainScreen(
     modifier: Modifier = Modifier,
     navController: NavController,
-    mainScreenVM: MainScreenViewModel = hiltViewModel(),
+    mainScreenVM: MainScreenViewModel,
 ) {
 
     val uiState: MainScreenState by mainScreenVM.state.collectAsStateWithLifecycle()
@@ -85,7 +87,6 @@ fun MainScreen(
 
     var isSearchedOnce = false
     var isUserTriesToSearch by remember { mutableStateOf(false) }
-    var isUserTriesToSetFilters by remember { mutableStateOf(false) }
 
     val focusManager = LocalFocusManager.current
 
@@ -126,7 +127,17 @@ fun MainScreen(
                             color = Color.White
                         )
                     },
-                    onValueChange = mainScreenVM::collectUserInput,
+                    onValueChange = {
+                        mainScreenVM.collectUserInput(it)
+                        uiState.debounceJob?.cancel()
+                        uiState.debounceJob = uiState.debounceScope.launch {
+                            delay(1000L)
+                            if (uiState.userSearchInput == it) {
+                                mainScreenVM.searchMovies()
+                                movies.refresh()
+                            }
+                        }
+                    },
                     modifier = Modifier
                         .fillMaxSize(),
                     colors = TextFieldDefaults.colors().copy(

@@ -10,7 +10,11 @@
     <string name="to">To:</string>
     <string name="age">Age:</string>
     <string name="countries">Countries:</string>
+    <string name="chooseCountries">Choose countries</string>
+    <string name="chooseGenres">Choose genres</string>
     <string name="no_data">No data</string>
+    <string name="an_error_probably">There was probably an error while loading</string>
+    <string name="try_again">Try again</string>
     <string name="apply">Apply</string>
     <string name="adjust">Adjust</string>
     <string name="genres">Genres</string>

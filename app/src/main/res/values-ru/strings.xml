@@ -10,7 +10,11 @@
     <string name="to">ДО:</string>
     <string name="age">Возраст:</string>
     <string name="countries">Страны:</string>
+    <string name="chooseCountries">Выберите страны</string>
+    <string name="chooseGenres">Выберите жанры</string>
     <string name="no_data">Нет данных</string>
+    <string name="an_error_probably">Вероятно, произошла ошибка при загрузке</string>
+    <string name="try_again">Обновить</string>
     <string name="apply">Применить</string>
     <string name="adjust">Настроить</string>
     <string name="genres">Жанры</string>

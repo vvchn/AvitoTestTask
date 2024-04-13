@@ -1,26 +1,34 @@
 package com.vvchn.avitotesttask.presentation.mainscreen
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -29,6 +37,9 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -37,6 +48,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -49,52 +61,241 @@ import com.vvchn.avitotesttask.presentation.ui.theme.searchBarColor
 import com.vvchn.avitotesttask.presentation.ui.theme.topBarColor
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ChooseCountries(vm: MainScreenViewModel) {
-    Surface(color = searchBarColor, modifier = Modifier.fillMaxSize()) {
-        val lst = vm.getAllPossibleCountries()
-        val res: MutableMap<String, Boolean> = mutableMapOf()
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 20.dp),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            if (lst.isEmpty()) {
-                Text(text = stringResource(id = R.string.no_data), maxLines = 1)
-            } else {
-                lst.forEach { country ->
-                    res[country.name!!] = false
+fun ChooseCountries(vm: MainScreenViewModel, navController: NavController) {
+    val uiState by vm.state.collectAsStateWithLifecycle()
+
+    Surface(
+        color = searchBarColor, modifier = Modifier
+            .fillMaxSize()
+            .background(searchBarColor)
+    ) {
+        Scaffold(
+            containerColor = searchBarColor,
+            topBar = {
+                TopAppBar(title = {
+                    Text(
+                        text = stringResource(id = R.string.chooseCountries),
+                        color = Color.White,
+                        fontWeight = FontWeight.Bold
+                    )
+                }, navigationIcon = {
+                    IconButton(onClick = { navController.popBackStack() }) {
+                        Icon(
+                            Icons.AutoMirrored.Default.ArrowBack,
+                            contentDescription = "backToFiltersList",
+                            tint = Color.White
+                        )
+                    }
+                }, colors = TopAppBarDefaults.topAppBarColors().copy(containerColor = topBarColor))
+            },
+        ) { innerPadding ->
+            if (uiState.possibleCountries.isEmpty()) {
+                Column(
+                    modifier = Modifier
+                        .padding(innerPadding)
+                        .fillMaxSize(),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    if (uiState.isCountriesLoading) {
+                        CircularProgressIndicator(
+                            modifier = Modifier.align(alignment = Alignment.CenterHorizontally)
+                        )
+                    } else {
+                        Text(
+                            text = stringResource(id = R.string.no_data),
+                            maxLines = 1,
+                            textAlign = TextAlign.Center,
+                            fontWeight = FontWeight.Bold,
+                            color = Color.White
+                        )
+                        Spacer(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(5.dp)
+                        )
+                        Text(
+                            text = stringResource(id = R.string.an_error_probably),
+                            maxLines = 1,
+                            textAlign = TextAlign.Center,
+                            fontWeight = FontWeight.Bold,
+                            color = Color.White
+                        )
+                        Spacer(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(15.dp)
+                        )
+
+                        Button(
+                            onClick = {
+                                vm.tryToLoadCountriesList()
+                            },
+                            modifier = Modifier
+                                .width(140.dp)
+                                .height(60.dp),
+                            colors = ButtonColors(
+                                containerColor = adjustButton,
+                                contentColor = Color.White,
+                                disabledContainerColor = adjustButton,
+                                disabledContentColor = Color.White
+                            ),
+                            shape = RectangleShape,
+                        ) {
+                            Text(stringResource(id = R.string.try_again))
+                        }
+                    }
                 }
-                LazyColumn {
-                    items(lst.size) { country ->
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Text(text = lst[country].name!!)
+            } else {
+                LazyColumn(modifier = Modifier.padding(innerPadding)) {
+                    items(uiState.possibleCountries, key = { it.country.name ?: "" }) { country ->
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text(
+                                text = country.country.name ?: "-",
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis,
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .padding(start = 5.dp, end = 10.dp),
+                                color = Color.White
+                            )
                             Checkbox(
-                                checked = res[lst[country].name]!!,
-                                onCheckedChange = { }
+                                modifier = Modifier
+                                    .wrapContentWidth(),
+                                checked = country.isSelected,
+                                onCheckedChange = { choice ->
+                                    vm.onCountryCheckboxClicked(country.country.name ?: "", choice)
+                                }
                             )
                         }
                     }
                 }
             }
-            Spacer(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(10.dp)
-            )
         }
-        Button(modifier = Modifier.fillMaxWidth(fraction = 0.8f), onClick = { }) {
-            Text(
-                text = stringResource(id = R.string.apply),
-                color = Color.White,
-                fontWeight = FontWeight.Bold,
-                fontSize = 16.sp,
-                textAlign = TextAlign.Center
-            )
-        }
+    }
+}
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun ChooseGenres(vm: MainScreenViewModel, navController: NavController) {
+    val uiState by vm.state.collectAsStateWithLifecycle()
+
+    Surface(
+        color = searchBarColor, modifier = Modifier
+            .fillMaxSize()
+            .background(searchBarColor)
+    ) {
+        Scaffold(
+            containerColor = searchBarColor,
+            topBar = {
+                TopAppBar(title = {
+                    Text(
+                        text = stringResource(id = R.string.chooseGenres),
+                        color = Color.White,
+                        fontWeight = FontWeight.Bold
+                    )
+                }, navigationIcon = {
+                    IconButton(onClick = { navController.popBackStack() }) {
+                        Icon(
+                            Icons.AutoMirrored.Default.ArrowBack,
+                            contentDescription = "backToFiltersList",
+                            tint = Color.White
+                        )
+                    }
+                }, colors = TopAppBarDefaults.topAppBarColors().copy(containerColor = topBarColor))
+            },
+        ) { innerPadding ->
+            if (uiState.possibleGenres.isEmpty()) {
+                Column(
+                    modifier = Modifier
+                        .padding(innerPadding)
+                        .fillMaxSize(),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    if (uiState.isGenresLoading) {
+                        CircularProgressIndicator(
+                            modifier = Modifier.align(alignment = Alignment.CenterHorizontally)
+                        )
+                    } else {
+                        Text(
+                            text = stringResource(id = R.string.no_data),
+                            maxLines = 1,
+                            textAlign = TextAlign.Center,
+                            fontWeight = FontWeight.Bold,
+                            color = Color.White
+                        )
+                        Spacer(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(5.dp)
+                        )
+                        Text(
+                            text = stringResource(id = R.string.an_error_probably),
+                            maxLines = 1,
+                            textAlign = TextAlign.Center,
+                            fontWeight = FontWeight.Bold,
+                            color = Color.White
+                        )
+                        Spacer(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(15.dp)
+                        )
+
+                        Button(
+                            onClick = {
+                                vm.tryToLoadGenresList()
+                            },
+                            modifier = Modifier
+                                .width(140.dp)
+                                .height(60.dp),
+                            colors = ButtonColors(
+                                containerColor = adjustButton,
+                                contentColor = Color.White,
+                                disabledContainerColor = adjustButton,
+                                disabledContentColor = Color.White
+                            ),
+                            shape = RectangleShape,
+                        ) {
+                            Text(stringResource(id = R.string.try_again))
+                        }
+                    }
+                }
+            } else {
+                LazyColumn(modifier = Modifier.padding(innerPadding)) {
+                    items(uiState.possibleGenres, key = { it.genre.name ?: "" }) { genre ->
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text(
+                                text = genre.genre.name ?: "-",
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis,
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .padding(start = 5.dp, end = 10.dp),
+                                color = Color.White
+                            )
+                            Checkbox(
+                                modifier = Modifier
+                                    .wrapContentWidth(),
+                                checked = genre.isSelected,
+                                onCheckedChange = { choice ->
+                                    vm.onGenreCheckboxClicked(genre.genre.name ?: "", choice)
+                                }
+                            )
+                        }
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -122,7 +323,7 @@ fun FiltersBar(vm: MainScreenViewModel, navController: NavController) {
                 IconButton(onClick = { navController.popBackStack() }) {
                     Icon(
                         Icons.AutoMirrored.Default.ArrowBack,
-                        contentDescription = "backToMainScreen",
+                        contentDescription = "backToFiltersList",
                         tint = Color.White
                     )
                 }
@@ -270,7 +471,9 @@ fun FiltersBar(vm: MainScreenViewModel, navController: NavController) {
                 )
 
                 Button(
-                    onClick = { navController.navigate(Route.ChooseCountries.route) },
+                    onClick = {
+                        navController.navigate(Route.ChooseCountries.route)
+                    },
                     modifier = Modifier
                         .width(140.dp)
                         .height(60.dp),
@@ -307,7 +510,9 @@ fun FiltersBar(vm: MainScreenViewModel, navController: NavController) {
                 )
 
                 Button(
-                    onClick = { navController.navigate(Route.ChooseCountries.route) },
+                    onClick = {
+                        navController.navigate(Route.ChooseGenres.route)
+                    },
                     modifier = Modifier
                         .width(140.dp)
                         .height(60.dp),
@@ -334,11 +539,15 @@ fun FiltersBar(vm: MainScreenViewModel, navController: NavController) {
                 modifier = Modifier.fillMaxSize()
             ) {
                 Button(
-                    // ALSO: APPLY FILTERS AND REFRESH PAGE
-                    onClick = { navController.popBackStack() },
+                    onClick = {
+                        vm.applyFilters()
+                        vm.getMovies()
+                        navController.popBackStack()
+                    },
                     modifier = Modifier
                         .width(235.dp)
                         .height(85.dp),
+                    shape = RectangleShape,
                 ) {
                     Text(stringResource(id = R.string.apply))
                 }

@@ -31,7 +31,7 @@ internal fun CountryDto.toCountry(): Country {
     )
 }
 
-private fun GenresDto.toGenres(): Genres {
+internal fun GenresDto.toGenres(): Genres {
     return Genres(
         name = name
     )

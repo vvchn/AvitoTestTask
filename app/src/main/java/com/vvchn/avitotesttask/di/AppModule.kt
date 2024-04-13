@@ -5,7 +5,8 @@ import com.vvchn.avitotesttask.common.ApiKeyInterceptor
 import com.vvchn.avitotesttask.data.remote.api.KinopoiskApi
 import com.vvchn.avitotesttask.data.remote.repository.KinopoiskRepositoryImpl
 import com.vvchn.avitotesttask.domain.repository.KinopoiskRepository
-import com.vvchn.avitotesttask.domain.usecases.GetAllPossiblecountriesUseCase
+import com.vvchn.avitotesttask.domain.usecases.GetAllPossibleCountriesUseCase
+import com.vvchn.avitotesttask.domain.usecases.GetAllPossibleGenresUseCase
 import com.vvchn.avitotesttask.domain.usecases.GetMovieProductionCompaniesUseCase
 import com.vvchn.avitotesttask.domain.usecases.GetMoviesUseCase
 import com.vvchn.avitotesttask.domain.usecases.GetPostersUseCase
@@ -56,8 +57,14 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideGetAllPossiblecountriesUseCase(repository: KinopoiskRepository): GetAllPossiblecountriesUseCase {
-        return GetAllPossiblecountriesUseCase(repository)
+    fun provideGetAllPossibleCountriesUseCase(repository: KinopoiskRepository): GetAllPossibleCountriesUseCase {
+        return GetAllPossibleCountriesUseCase(repository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGetAllPossibleGenresUseCase(repository: KinopoiskRepository): GetAllPossibleGenresUseCase {
+        return GetAllPossibleGenresUseCase(repository)
     }
 
     @Provides

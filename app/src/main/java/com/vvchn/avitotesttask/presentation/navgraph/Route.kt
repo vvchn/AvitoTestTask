@@ -9,6 +9,8 @@ sealed class Route(
 
     object ChooseCountries : Route(route = "chooseCountries")
 
+    object ChooseGenres : Route(route = "chooseGenres")
+
     object Filters : Route("filterPage")
 
 }
