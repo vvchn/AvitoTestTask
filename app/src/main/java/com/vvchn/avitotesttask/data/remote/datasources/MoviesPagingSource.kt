@@ -12,7 +12,7 @@ import java.net.SocketTimeoutException
 class MoviesPagingSource (
     private val api: KinopoiskApi,
     private val query: String? = null,
-    private val queryParameters: Map<String, List<String>>? = null,
+    private val queryParameters: Map<String, String>? = null,
 ) : PagingSource<Int, MovieInfo>() {
 
     override fun getRefreshKey(state: PagingState<Int, MovieInfo>): Int? {

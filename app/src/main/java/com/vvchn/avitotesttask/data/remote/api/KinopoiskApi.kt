@@ -1,6 +1,7 @@
 package com.vvchn.avitotesttask.data.remote.api
 
 import com.vvchn.avitotesttask.data.remote.api.dtos.CountryDto
+import com.vvchn.avitotesttask.data.remote.api.dtos.GenresDto
 import com.vvchn.avitotesttask.data.remote.api.dtos.MovieDto
 import com.vvchn.avitotesttask.data.remote.api.dtos.MovieInfoDto
 import com.vvchn.avitotesttask.data.remote.api.dtos.PosterDto
@@ -19,13 +20,18 @@ interface KinopoiskApi {
     suspend fun getMovies(
         @Query("page") page: Int,
         @Query("limit") limit: Int,
-        @QueryMap queryParameters: @JvmSuppressWildcards Map<String, List<String>>?,
+        @QueryMap queryParameters: @JvmSuppressWildcards Map<String, String>?,
     ): MovieDto
 
-    @GET("/v1.4/movie/possible-values-by-field")
-    suspend fun getPossibleValues(
+    @GET("/v1/movie/possible-values-by-field")
+    suspend fun getPossibleCountries(
         @Query("field") field: String,
     ): List<CountryDto>
+
+    @GET("/v1/movie/possible-values-by-field")
+    suspend fun getPossibleGenres(
+        @Query("field") field: String,
+    ): List<GenresDto>
 
     @GET("/v1.4/movie/search")
     suspend fun searchMovies(
@@ -38,20 +44,20 @@ interface KinopoiskApi {
     suspend fun getReviewsByMovieID(
         @Query("page") page: Int,
         @Query("limit") limit: Int,
-        @QueryMap queryParameters: @JvmSuppressWildcards Map<String, List<String>>?,
+        @QueryMap queryParameters: @JvmSuppressWildcards Map<String, String>?,
     ): ReviewDto
 
     @GET("/v1.4/studio")
     suspend fun getMovieProductionCompanies(
         @Query("page") page: Int,
         @Query("limit") limit: Int,
-        @QueryMap queryParameters: @JvmSuppressWildcards Map<String, List<String>>?,
+        @QueryMap queryParameters: @JvmSuppressWildcards Map<String, String>?,
     ): StudioDto
 
     @GET("/v1.4/image")
     suspend fun getPosters(
         @Query("page") page: Int,
         @Query("limit") limit: Int,
-        @QueryMap queryParameters: @JvmSuppressWildcards Map<String, List<String>>?,
+        @QueryMap queryParameters: @JvmSuppressWildcards Map<String, String>?,
     ): PosterDto
 }

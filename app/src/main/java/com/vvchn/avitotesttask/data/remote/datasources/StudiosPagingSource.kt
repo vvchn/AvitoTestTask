@@ -11,7 +11,7 @@ import java.net.SocketTimeoutException
 
 class StudiosPagingSource (
     private val api: KinopoiskApi,
-    private val queryParameters: Map<String, List<String>>?,
+    private val queryParameters: Map<String, String>?,
 ) : PagingSource<Int, StudioInfo>() {
 
     override fun getRefreshKey(state: PagingState<Int, StudioInfo>): Int? {
