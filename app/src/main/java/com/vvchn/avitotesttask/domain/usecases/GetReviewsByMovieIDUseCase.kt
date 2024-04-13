@@ -11,7 +11,7 @@ class GetReviewsByMovieIDUseCase @Inject constructor(
 ) {
     operator fun invoke(
         limit: Int,
-        queryParameters: Map<String, List<String>>?,
+        queryParameters: Map<String, String>?,
     ): Flow<PagingData<ReviewInfo>> {
         return repository.getReviewsByMovieID(
             limit = limit,

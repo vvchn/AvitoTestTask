@@ -11,7 +11,7 @@ class GetMovieProductionCompaniesUseCase @Inject constructor(
 ) {
     operator fun invoke(
         limit: Int,
-        queryParameters: Map<String, List<String>>?,
+        queryParameters: Map<String, String>?,
     ): Flow<PagingData<StudioInfo>> {
         return repository.getMovieProductionCompanies(
             limit = limit,

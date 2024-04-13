@@ -11,7 +11,7 @@ class GetPostersUseCase @Inject constructor(
 ) {
     operator fun invoke(
         limit: Int,
-        queryParameters: Map<String, List<String>>?,
+        queryParameters: Map<String, String>?,
     ): Flow<PagingData<PosterInfo>> {
         return repository.getPosters(
             limit = limit,
