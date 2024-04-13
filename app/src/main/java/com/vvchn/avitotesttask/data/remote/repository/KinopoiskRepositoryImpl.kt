@@ -4,6 +4,7 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.vvchn.avitotesttask.data.remote.api.KinopoiskApi
+import com.vvchn.avitotesttask.data.remote.common.toCountry
 import com.vvchn.avitotesttask.data.remote.common.toMovieInfo
 import com.vvchn.avitotesttask.data.remote.common.toPoster
 import com.vvchn.avitotesttask.data.remote.common.toStudio
@@ -11,6 +12,7 @@ import com.vvchn.avitotesttask.data.remote.datasources.MoviesPagingSource
 import com.vvchn.avitotesttask.data.remote.datasources.PostersPagingSource
 import com.vvchn.avitotesttask.data.remote.datasources.ReviewsPagingSource
 import com.vvchn.avitotesttask.data.remote.datasources.StudiosPagingSource
+import com.vvchn.avitotesttask.domain.models.Country
 import com.vvchn.avitotesttask.domain.models.MovieInfo
 import com.vvchn.avitotesttask.domain.models.Poster
 import com.vvchn.avitotesttask.domain.models.PosterInfo
@@ -27,6 +29,11 @@ import javax.inject.Inject
 class KinopoiskRepositoryImpl @Inject constructor(
     private val api: KinopoiskApi
 ) : KinopoiskRepository {
+    override suspend fun getPossibleValues(field: String): List<Country> {
+        return api.getPossibleValues(
+            field = field,
+        ).map { countryDto -> countryDto.toCountry() }
+    }
 
     override fun getMovies(
         limit: Int,

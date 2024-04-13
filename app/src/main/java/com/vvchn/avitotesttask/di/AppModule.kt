@@ -5,6 +5,7 @@ import com.vvchn.avitotesttask.common.ApiKeyInterceptor
 import com.vvchn.avitotesttask.data.remote.api.KinopoiskApi
 import com.vvchn.avitotesttask.data.remote.repository.KinopoiskRepositoryImpl
 import com.vvchn.avitotesttask.domain.repository.KinopoiskRepository
+import com.vvchn.avitotesttask.domain.usecases.GetAllPossiblecountriesUseCase
 import com.vvchn.avitotesttask.domain.usecases.GetMovieProductionCompaniesUseCase
 import com.vvchn.avitotesttask.domain.usecases.GetMoviesUseCase
 import com.vvchn.avitotesttask.domain.usecases.GetPostersUseCase
@@ -51,6 +52,12 @@ object AppModule {
     @Singleton
     fun provideKinopoiskRepository(api: KinopoiskApi): KinopoiskRepository {
         return KinopoiskRepositoryImpl(api)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGetAllPossiblecountriesUseCase(repository: KinopoiskRepository): GetAllPossiblecountriesUseCase {
+        return GetAllPossiblecountriesUseCase(repository)
     }
 
     @Provides

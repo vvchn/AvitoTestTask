@@ -1,6 +1,7 @@
 package com.vvchn.avitotesttask.domain.repository
 
 import androidx.paging.PagingData
+import com.vvchn.avitotesttask.domain.models.Country
 import com.vvchn.avitotesttask.domain.models.MovieInfo
 import com.vvchn.avitotesttask.domain.models.PosterInfo
 import com.vvchn.avitotesttask.domain.models.ReviewInfo
@@ -8,6 +9,9 @@ import com.vvchn.avitotesttask.domain.models.StudioInfo
 import kotlinx.coroutines.flow.Flow
 
 interface KinopoiskRepository {
+    suspend fun getPossibleValues(
+        field: String,
+    ): List<Country>
 
     fun getMovies(
         limit: Int,
