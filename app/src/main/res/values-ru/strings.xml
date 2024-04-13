@@ -6,7 +6,12 @@
     <string name="catalogue">Каталог</string>
     <string name="nothing_found">Ничего не найдено</string>
     <string name="years">Годы:</string>
-    <string name="from">С</string>
-    <string name="to">ПО</string>
+    <string name="from">С:</string>
+    <string name="to">ДО:</string>
     <string name="age">Возраст:</string>
+    <string name="countries">Страны:</string>
+    <string name="no_data">Нет данных</string>
+    <string name="apply">Применить</string>
+    <string name="adjust">Настроить</string>
+    <string name="genres">Жанры</string>
 </resources>

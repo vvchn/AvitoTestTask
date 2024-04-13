@@ -25,7 +25,7 @@ import com.vvchn.avitotesttask.domain.models.ReviewInfo
 import com.vvchn.avitotesttask.domain.models.Studio
 import com.vvchn.avitotesttask.domain.models.StudioInfo
 
-private fun CountryDto.toCountry(): Country {
+internal fun CountryDto.toCountry(): Country {
     return Country(
         name = name,
     )

@@ -6,7 +6,12 @@
     <string name="catalogue">Catalogue</string>
     <string name="nothing_found">Nothing found</string>
     <string name="years">Years:</string>
-    <string name="from">From</string>
-    <string name="to">To</string>
+    <string name="from">From:</string>
+    <string name="to">To:</string>
     <string name="age">Age:</string>
+    <string name="countries">Countries:</string>
+    <string name="no_data">No data</string>
+    <string name="apply">Apply</string>
+    <string name="adjust">Adjust</string>
+    <string name="genres">Genres</string>
 </resources>

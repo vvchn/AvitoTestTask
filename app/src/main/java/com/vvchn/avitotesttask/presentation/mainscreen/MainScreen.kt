@@ -1,10 +1,7 @@
 package com.vvchn.avitotesttask.presentation.mainscreen
 
-import android.content.Context
-import android.util.Range
 import android.widget.Toast
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,26 +11,26 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.Button
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.RangeSlider
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -48,10 +45,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
@@ -59,19 +54,17 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavController
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemContentType
-import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
-import com.bumptech.glide.integration.compose.GlideImage
-import com.bumptech.glide.request.RequestOptions
 import com.vvchn.avitotesttask.R
-import com.vvchn.avitotesttask.domain.models.MovieInfo
 import com.vvchn.avitotesttask.presentation.Dimens
+import com.vvchn.avitotesttask.presentation.navgraph.Route
 import com.vvchn.avitotesttask.presentation.ui.theme.mainBackground
 import com.vvchn.avitotesttask.presentation.ui.theme.searchBarColor
 import com.vvchn.avitotesttask.presentation.ui.theme.topBarColor
@@ -81,18 +74,18 @@ import com.vvchn.avitotesttask.presentation.ui.theme.topBarColor
 @Composable
 fun MainScreen(
     modifier: Modifier = Modifier,
-    mainScreenVM: MainScreenViewModel = viewModel()
+    navController: NavController,
+    mainScreenVM: MainScreenViewModel = hiltViewModel(),
 ) {
-    var isSearchedOnce = false
+
+    val uiState: MainScreenState by mainScreenVM.state.collectAsStateWithLifecycle()
 
     val context = LocalContext.current
     val movies = mainScreenVM.mainScreenFlow.collectAsLazyPagingItems()
 
-    val gridState = rememberLazyGridState()
-
+    var isSearchedOnce = false
     var isUserTriesToSearch by remember { mutableStateOf(false) }
     var isUserTriesToSetFilters by remember { mutableStateOf(false) }
-    var userInput by remember { mutableStateOf(mainScreenVM.state.value.userSearchInput) }
 
     val focusManager = LocalFocusManager.current
 
@@ -103,20 +96,14 @@ fun MainScreen(
             },
             actions = {
                 IconButton(onClick = {
-                    if (isUserTriesToSetFilters) {
-                        isUserTriesToSetFilters = !isUserTriesToSetFilters
-                    }
                     isUserTriesToSearch = !isUserTriesToSearch
                 }) {
                     Icon(Icons.Default.Search, contentDescription = "Search", tint = Color.White)
                 }
                 IconButton(onClick = {
-                    if (isUserTriesToSearch) {
-                        isUserTriesToSearch = !isUserTriesToSearch
-                    }
-                    isUserTriesToSetFilters = !isUserTriesToSetFilters
+                    navController.navigate(Route.Filters.route)
                 }) {
-                    Icon(Icons.Default.MoreVert, contentDescription = "Filters", tint = Color.White)
+                    Icon(Icons.Default.Menu, contentDescription = "Filters", tint = Color.White)
                 }
             },
             colors = TopAppBarDefaults.topAppBarColors().copy(containerColor = topBarColor)
@@ -132,14 +119,14 @@ fun MainScreen(
             )
             {
                 TextField(
-                    value = userInput,
+                    value = uiState.userSearchInput,
                     placeholder = {
                         Text(
                             text = stringResource(R.string.search_movie_by_name),
                             color = Color.White
                         )
                     },
-                    onValueChange = { userInput = it },
+                    onValueChange = mainScreenVM::collectUserInput,
                     modifier = Modifier
                         .fillMaxSize(),
                     colors = TextFieldDefaults.colors().copy(
@@ -152,7 +139,7 @@ fun MainScreen(
                     keyboardActions = KeyboardActions(onDone = {
                         focusManager.clearFocus()
                         isUserTriesToSearch = !isUserTriesToSearch
-                        mainScreenVM.searchMovies(userInput)
+                        mainScreenVM.searchMovies()
                     }),
                     keyboardOptions = KeyboardOptions.Default.copy(
                         imeAction = ImeAction.Done,
@@ -162,9 +149,7 @@ fun MainScreen(
             }
         }
 
-        if (isUserTriesToSetFilters) {
-            FiltersBar(mainScreenVM)
-        }
+
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -182,7 +167,6 @@ fun MainScreen(
                         modifier = Modifier.fillMaxSize(),
                         verticalArrangement = Arrangement.spacedBy(Dimens.cellsArrangement),
                         horizontalArrangement = Arrangement.spacedBy(Dimens.cellsArrangement),
-                        state = gridState,
                     ) {
                         items(
                             count = movies.itemCount,
@@ -190,7 +174,11 @@ fun MainScreen(
                             contentType = movies.itemContentType { "Movie" },
                         )
                         { movie ->
-                            MovieItem(movieInfo = movies[movie], context = context)
+                            MovieItem(
+                                movieInfo = movies[movie],
+                                context = context,
+                                navController = navController
+                            )
                         }
                         item {
                             if (movies.loadState.append is LoadState.Loading) {
@@ -232,244 +220,3 @@ fun MainScreen(
     }
 }
 
-@OptIn(ExperimentalGlideComposeApi::class)
-@Composable
-fun MovieItem(
-    movieInfo: MovieInfo?,
-    context: Context,
-) {
-    Box(
-        modifier = Modifier
-            .heightIn(Dimens.movieCardMaxHeight)
-            .widthIn(Dimens.movieCardMaxWidth)
-            .clickable {
-                Toast
-                    .makeText(
-                        context,
-                        "${movieInfo!!.id}",
-                        Toast.LENGTH_LONG
-                    )
-                    .show()
-            }
-    ) {
-        Column(
-            modifier = Modifier.padding(Dimens.movieCardContentPadding),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Box(
-                modifier = Modifier
-                    .heightIn(max = Dimens.movieCardMaxHeight - 50.dp)
-                    .widthIn(max = Dimens.movieCardMaxWidth)
-            ) {
-                GlideImage(
-                    model = movieInfo!!.moviePoster?.previewUrl,
-                    contentDescription = "moviePreview",
-                    contentScale = ContentScale.Fit,
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .clip(shape = MaterialTheme.shapes.small)
-                ) {
-                    it.error(R.drawable.not_found).placeholder(R.drawable.placeholder_image)
-                        .apply(RequestOptions().fitCenter())
-                }
-            }
-            Row(horizontalArrangement = Arrangement.spacedBy(Dimens.movieShortInfoSpacing)) {
-                Text(
-                    text = "★" + String.format("%.1f", movieInfo!!.ratingKP!!.kp),
-                    textAlign = TextAlign.Left,
-                    color = Color.Yellow,
-                )
-                Spacer(modifier = Modifier.widthIn(5.dp))
-                Text(
-                    text = movieInfo?.year.toString() ?: stringResource(R.string.unknown),
-                    textAlign = TextAlign.Left,
-                    color = Color.White,
-                )
-            }
-            Text(
-                text = movieInfo?.name ?: "${R.string.unknown}",
-                maxLines = 2,
-                overflow = TextOverflow.Ellipsis,
-                textAlign = TextAlign.Center,
-                color = Color.White,
-            )
-        }
-    }
-}
-
-@Composable
-private fun YearFilter(vm: MainScreenViewModel) {
-    var yearLeftBound by remember { mutableStateOf(vm.state.value.yearLeftBound) }
-    var yearRightBound by remember { mutableStateOf(vm.state.value.yearRightBound) }
-
-    Row(
-        horizontalArrangement = Arrangement.Absolute.SpaceAround,
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(60.dp)
-    ) {
-        Text(
-            text = stringResource(id = R.string.years),
-            fontSize = 25.sp,
-            fontWeight = FontWeight.Bold,
-            color = Color.White,
-            textAlign = TextAlign.Center,
-        )
-        Spacer(modifier = Modifier.size(10.dp))
-        TextField(
-            modifier = Modifier
-                .fillMaxHeight()
-                .width(75.dp),
-            value = yearLeftBound,
-            placeholder = {
-                Text(text = "1800")
-            },
-            colors = TextFieldDefaults.colors().copy(
-                unfocusedIndicatorColor = MaterialTheme.colorScheme.surfaceContainer,
-                focusedIndicatorColor = MaterialTheme.colorScheme.surfaceContainer,
-            ),
-            onValueChange = {
-                if (it.length <= 4 && it.all { char -> char.isDigit() }) {
-                    yearLeftBound = it
-                    vm.state.value.yearLeftBound = yearLeftBound
-                }
-            },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-            label = { Text(text = stringResource(id = R.string.from)) },
-            maxLines = 1,
-            singleLine = true
-        )
-        Spacer(modifier = Modifier.width(10.dp))
-        TextField(
-            modifier = Modifier
-                .fillMaxHeight()
-                .width(75.dp),
-            value = yearRightBound,
-            placeholder = {
-                Text(text = "2024")
-            },
-            colors = TextFieldDefaults.colors().copy(
-                unfocusedIndicatorColor = MaterialTheme.colorScheme.surfaceContainer,
-                focusedIndicatorColor = MaterialTheme.colorScheme.surfaceContainer,
-            ),
-            onValueChange = {
-                if (it.length <= 4 && it.all { char -> char.isDigit() }) {
-                    yearRightBound = it
-                    vm.state.value.yearRightBound = yearRightBound
-                }
-            },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-            label = { Text(text = stringResource(id = R.string.to)) },
-            maxLines = 1,
-            singleLine = true
-        )
-    }
-}
-
-@Composable
-private fun AgeFilter(vm: MainScreenViewModel) {
-    var ageRatingLeftBound by remember { mutableStateOf(vm.state.value.ageRatingLeftBound) }
-    var ageRatingRightBound by remember { mutableStateOf(vm.state.value.ageRatingRightBound) }
-
-    Row(
-        horizontalArrangement = Arrangement.Absolute.SpaceAround,
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(60.dp)
-    ) {
-        Text(
-            text = stringResource(id = R.string.age),
-            fontSize = 25.sp,
-            fontWeight = FontWeight.Bold,
-            color = Color.White,
-            textAlign = TextAlign.Center,
-        )
-        Spacer(modifier = Modifier.size(10.dp))
-        TextField(
-            modifier = Modifier
-                .fillMaxHeight()
-                .width(75.dp),
-            value = ageRatingLeftBound,
-            placeholder = {
-                Text(text = "0")
-            },
-            colors = TextFieldDefaults.colors().copy(
-                unfocusedIndicatorColor = MaterialTheme.colorScheme.surfaceContainer,
-                focusedIndicatorColor = MaterialTheme.colorScheme.surfaceContainer,
-            ),
-            onValueChange = {
-                if (it.length <= 2 && it.all { char -> char.isDigit() }) {
-                    ageRatingLeftBound = it
-                    vm.state.value.yearLeftBound = ageRatingLeftBound
-                }
-            },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-            label = { Text(text = stringResource(id = R.string.from)) },
-            maxLines = 1,
-            singleLine = true
-        )
-        Spacer(modifier = Modifier.width(10.dp))
-        TextField(
-            modifier = Modifier
-                .fillMaxHeight()
-                .width(75.dp),
-            value = ageRatingRightBound,
-            placeholder = {
-                Text(text = "18")
-            },
-            colors = TextFieldDefaults.colors().copy(
-                unfocusedIndicatorColor = MaterialTheme.colorScheme.surfaceContainer,
-                focusedIndicatorColor = MaterialTheme.colorScheme.surfaceContainer,
-            ),
-            onValueChange = {
-                if (it.length <= 2 && it.all { char -> char.isDigit() }) {
-                    ageRatingRightBound = it
-                    vm.state.value.yearRightBound = ageRatingRightBound
-                }
-            },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-            label = { Text(text = stringResource(id = R.string.to)) },
-            maxLines = 1,
-            singleLine = true
-        )
-    }
-}
-
-@Composable
-private fun FiltersBar(vm: MainScreenViewModel) {
-    Surface(
-        shape = RectangleShape,
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(Dimens.filtersBarHeight)
-            .background(searchBarColor),
-        color = searchBarColor,
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(20.dp)
-        ) {
-            Text(
-                text = stringResource(id = R.string.filters),
-                color = Color.White,
-                fontSize = 25.sp,
-                fontWeight = FontWeight.Bold,
-                textAlign = TextAlign.Center
-            )
-            Spacer(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(20.dp)
-            )
-            YearFilter(vm = vm)
-            Spacer(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(20.dp)
-            )
-            AgeFilter(vm = vm)
-        }
-    }
-}
