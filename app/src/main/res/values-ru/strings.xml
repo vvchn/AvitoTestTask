@@ -29,4 +29,6 @@
     <string name="reviewTitle">Заголовок:</string>
     <string name="reviewType">Тип отзыва</string>
     <string name="production">Производство</string>
+    <string name="reviews">Отзывов:</string>
+    <string name="reviewInstruction">(Чтобы раскрыть отзыв, нажмите на него)</string>
 </resources>

@@ -6,6 +6,7 @@ import androidx.paging.PagingData
 import com.vvchn.avitotesttask.data.remote.api.KinopoiskApi
 import com.vvchn.avitotesttask.data.remote.common.toCountry
 import com.vvchn.avitotesttask.data.remote.common.toGenres
+import com.vvchn.avitotesttask.data.remote.common.toReview
 import com.vvchn.avitotesttask.data.remote.common.toStudio
 import com.vvchn.avitotesttask.data.remote.datasources.MoviesPagingSource
 import com.vvchn.avitotesttask.data.remote.datasources.PostersPagingSource
@@ -14,6 +15,7 @@ import com.vvchn.avitotesttask.domain.models.Country
 import com.vvchn.avitotesttask.domain.models.Genres
 import com.vvchn.avitotesttask.domain.models.MovieInfo
 import com.vvchn.avitotesttask.domain.models.PosterInfo
+import com.vvchn.avitotesttask.domain.models.Review
 import com.vvchn.avitotesttask.domain.models.ReviewInfo
 import com.vvchn.avitotesttask.domain.models.Studio
 import com.vvchn.avitotesttask.domain.repository.KinopoiskRepository
@@ -65,6 +67,12 @@ class KinopoiskRepositoryImpl @Inject constructor(
             ReviewsPagingSource(api, queryParameters)
         }
     ).flow
+
+    override suspend fun getReviewsCountByMovieID(
+        queryParameters:  Map<String, String>?,
+    ): Review {
+        return api.getReviewsCountByMovieID(queryParameters = queryParameters).toReview()
+    }
 
     override suspend fun getMovieProductionCompanies(
         queryParameters: Map<String, String>?,

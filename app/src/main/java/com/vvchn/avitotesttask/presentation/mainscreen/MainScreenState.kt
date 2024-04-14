@@ -25,8 +25,8 @@ data class MainScreenState(
     val screenLimit: Int = 10,
     var userSearchInput: String = "",
     var yearLeftBound: String = "",
-    var yearMinimalLeftBound: Int = 1874,
-    var yearMaximumRightBound: Int = 2050,
+    val yearMinimalLeftBound: Int = 1874,
+    val yearMaximumRightBound: Int = 2050,
     var yearRightBound: String = "",
     var yearValidationErrorCode: Int = 0,
 )

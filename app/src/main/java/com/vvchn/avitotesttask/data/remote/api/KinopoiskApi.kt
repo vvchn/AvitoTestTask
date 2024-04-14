@@ -43,6 +43,11 @@ interface KinopoiskApi {
         @QueryMap queryParameters: @JvmSuppressWildcards Map<String, String>?,
     ): ReviewDto
 
+    @GET("/v1.4/review")
+    suspend fun getReviewsCountByMovieID(
+        @QueryMap queryParameters: @JvmSuppressWildcards Map<String, String>?,
+    ): ReviewDto
+
     @GET("/v1.4/studio")
     suspend fun getMovieProductionCompanies(
         @QueryMap queryParameters: @JvmSuppressWildcards Map<String, String>?,

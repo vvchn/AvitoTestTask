@@ -5,7 +5,6 @@ import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -77,7 +76,7 @@ import com.vvchn.avitotesttask.presentation.ui.theme.searchBarColor
 import com.vvchn.avitotesttask.presentation.ui.theme.topBarColor
 
 
-private fun String.ClearFromBrackets(): String {
+private fun String.clearFromBrackets(): String {
     return this.replace("[", "").replace("]", "")
 }
 
@@ -203,8 +202,10 @@ fun MovieDetailScreen(
                                 color = Color.White,
                             )
                             Text(
-                                text = uiState.movie?.genres?.map { genre -> genre.name }.toString()
-                                    .ClearFromBrackets() ?: stringResource(id = R.string.unknown),
+                                text = uiState.movie?.genres?.map { genre -> genre.name }
+                                    ?.toString()
+                                    ?.clearFromBrackets()
+                                    ?: stringResource(id = R.string.unknown),
                                 maxLines = 3,
                                 overflow = TextOverflow.Ellipsis,
                                 color = Color.White,
@@ -212,7 +213,7 @@ fun MovieDetailScreen(
                             )
                             Text(
                                 text = uiState.movie?.countries?.map { country -> country.name }
-                                    .toString().ClearFromBrackets()
+                                    ?.toString()?.clearFromBrackets()
                                     ?: stringResource(id = R.string.unknown),
                                 maxLines = 1,
                                 overflow = TextOverflow.Ellipsis,
@@ -220,8 +221,8 @@ fun MovieDetailScreen(
                                 fontSize = Dimens.movieInformationSize,
                             )
                             Text(
-                                text = (uiState.movie?.year.toString()
-                                    ?: stringResource(id = R.string.unknown)) + ", " + uiState.movie?.ageRating.toString() + "+   " + (uiState.movie?.ratingMpaa
+                                text = (uiState.movie?.let { movie -> movie.year.toString() }
+                                    ?: stringResource(id = R.string.no_data)) + ", " + uiState.movie?.let { movie -> movie.ageRating.toString() } + "+   " + (uiState.movie?.ratingMpaa
                                     ?: ""),
                                 maxLines = 1,
                                 overflow = TextOverflow.Ellipsis,
@@ -279,7 +280,6 @@ fun MovieDetailScreen(
                         if (posters.itemCount > 0) {
                             LazyRow(
                                 verticalAlignment = Alignment.CenterVertically,
-                                //horizontalArrangement = Arrangement.SpaceEvenly,
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .height(height = 200.dp)
@@ -322,16 +322,44 @@ fun MovieDetailScreen(
                         color = Color.White
                     )
 
+
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(10.dp)
-                            .horizontalScroll(rememberScrollState())
+                            .height(60.dp)
+                            .horizontalScroll(rememberScrollState()),
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = ("${context.getString(R.string.production)} " + uiState.productionList?.docs?.map { studioInfo -> studioInfo.title }
-                                .toString().replace("[", "").replace("]", ""))
-                                ?: context.getString(R.string.unknown),
+                            text = ((("${context.getString(R.string.production)} " + (uiState.productionList?.docs?.map { studioInfo -> studioInfo.title }
+                                ?.toString()?.replace("[", "")?.replace("]", "")
+                                ?: context.getString(R.string.unknown))))),
+                            textAlign = TextAlign.Left,
+                            color = Color.White,
+                            fontWeight = FontWeight.Bold,
+                        )
+                    }
+
+                    HorizontalDivider(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(2.dp)
+                            .alpha(0.3f),
+                        color = Color.White
+                    )
+
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(10.dp)
+                            .height(50.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = ("${context.getString(R.string.reviews)} " + uiState.reviewsCount) + " " + context.getString(
+                                R.string.reviewInstruction
+                            ),
                             textAlign = TextAlign.Left,
                             color = Color.White,
                             fontWeight = FontWeight.Bold,
@@ -456,23 +484,23 @@ private fun ReviewItem(reviewInfo: ReviewInfo?, context: Context) {
             modifier = Modifier.padding(vertical = 5.dp, horizontal = 8.dp)
         ) {
             Text(
-                text = ("${context.getString(R.string.author)} " + reviewInfo?.author)
-                    ?: context.getString(R.string.unknown),
+                text = ("${context.getString(R.string.author)} " + (reviewInfo?.author
+                    ?: context.getString(R.string.unknown))),
                 color = Color.White, textAlign = TextAlign.Left, fontWeight = FontWeight.Bold
             )
             Text(
-                text = ("${context.getString(R.string.date)} " + reviewInfo?.date.toString())
-                    ?: context.getString(R.string.unknown),
+                text = ("${context.getString(R.string.date)} " + (reviewInfo?.date?.toString()
+                    ?: context.getString(R.string.unknown))),
                 color = Color.White, fontWeight = FontWeight.Bold
             )
             Text(
-                text = ("${context.getString(R.string.reviewTitle)} " + reviewInfo?.title)
-                    ?: context.getString(R.string.unknown),
+                text = ("${context.getString(R.string.reviewTitle)} " + (reviewInfo?.title
+                    ?: context.getString(R.string.unknown))),
                 color = Color.White, fontWeight = FontWeight.Bold
             )
             Text(
-                text = ("${context.getString(R.string.reviewType)} " + reviewInfo?.type)
-                    ?: context.getString(R.string.unknown),
+                text = ("${context.getString(R.string.reviewType)} " + (reviewInfo?.type
+                    ?: context.getString(R.string.unknown))),
                 color = Color.White, fontWeight = FontWeight.Bold
             )
             Text(

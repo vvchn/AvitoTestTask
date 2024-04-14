@@ -5,9 +5,9 @@ import com.vvchn.avitotesttask.domain.models.Country
 import com.vvchn.avitotesttask.domain.models.Genres
 import com.vvchn.avitotesttask.domain.models.MovieInfo
 import com.vvchn.avitotesttask.domain.models.PosterInfo
+import com.vvchn.avitotesttask.domain.models.Review
 import com.vvchn.avitotesttask.domain.models.ReviewInfo
 import com.vvchn.avitotesttask.domain.models.Studio
-import com.vvchn.avitotesttask.domain.models.StudioInfo
 import kotlinx.coroutines.flow.Flow
 
 interface KinopoiskRepository {
@@ -33,6 +33,10 @@ interface KinopoiskRepository {
         limit: Int,
         queryParameters: Map<String, String>?,
     ): Flow<PagingData<ReviewInfo>>
+
+    suspend fun getReviewsCountByMovieID(
+        queryParameters: Map<String, String>?,
+    ): Review
 
     suspend fun getMovieProductionCompanies(
         queryParameters: Map<String, String>?,

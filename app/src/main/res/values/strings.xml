@@ -29,4 +29,6 @@
     <string name="reviewTitle">Title:</string>
     <string name="reviewType">Review type:</string>
     <string name="production">Production:</string>
+    <string name="reviews">Reviews:</string>
+    <string name="reviewInstruction">(Tap on review to expand)</string>
 </resources>

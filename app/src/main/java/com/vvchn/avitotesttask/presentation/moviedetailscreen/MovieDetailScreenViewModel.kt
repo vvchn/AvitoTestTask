@@ -4,14 +4,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import com.vvchn.avitotesttask.domain.models.Genres
 import com.vvchn.avitotesttask.domain.models.MovieInfo
 import com.vvchn.avitotesttask.domain.models.PosterInfo
 import com.vvchn.avitotesttask.domain.models.ReviewInfo
 import com.vvchn.avitotesttask.domain.usecases.GetMovieProductionCompaniesUseCase
 import com.vvchn.avitotesttask.domain.usecases.GetPostersUseCase
 import com.vvchn.avitotesttask.domain.usecases.GetReviewsByMovieIDUseCase
-import com.vvchn.avitotesttask.presentation.mainscreen.GenreUIState
+import com.vvchn.avitotesttask.domain.usecases.GetReviewsCountUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -31,7 +30,8 @@ class MovieDetailScreenViewModel @Inject constructor(
     private val getPostersUseCase: GetPostersUseCase,
     private val getReviewsByMovieIDUseCase: GetReviewsByMovieIDUseCase,
     private val getMovieProductionCompaniesUseCase: GetMovieProductionCompaniesUseCase,
-): ViewModel() {
+    private val getReviewsCountUseCase: GetReviewsCountUseCase,
+) : ViewModel() {
 
     private val _state = MutableStateFlow(MovieDetailScreenState())
     val state: StateFlow<MovieDetailScreenState> = _state.asStateFlow()
@@ -72,8 +72,36 @@ class MovieDetailScreenViewModel @Inject constructor(
                     _state.update { it.copy(isProductionCompaniesLoading = true) }
                 }
             }
-        }.flowOn(Dispatchers.IO).launchIn(viewModelScope) }
+        }.flowOn(Dispatchers.IO).launchIn(viewModelScope)
+    }
 
+    private fun loadReviewsCount(queryParameters: Map<String, String>) {
+        _state.update { it.copy(isReviewCounLoading = true) }
+        getReviewsCountUseCase(queryParameters).onEach { result ->
+            when (result) {
+                is com.vvchn.avitotesttask.common.Resource.Success -> {
+                    _state.update {
+                        it.copy(
+                            reviewsCount = result.data?.total ?: 0
+                        )
+                    }
+                }
+
+                is com.vvchn.avitotesttask.common.Resource.Error -> {
+                    _state.update {
+                        it.copy(
+                            error = result.message ?: "Unexpected error occurred",
+                            isReviewCounLoading = false
+                        )
+                    }
+                }
+
+                is com.vvchn.avitotesttask.common.Resource.Loading -> {
+                    _state.update { it.copy(isReviewCounLoading = true) }
+                }
+            }
+        }.flowOn(Dispatchers.IO).launchIn(viewModelScope)
+    }
     private fun loadReviews(query: Map<String, String>) {
         reviewsFlow =
             getReviewsByMovieIDUseCase(
@@ -84,11 +112,11 @@ class MovieDetailScreenViewModel @Inject constructor(
 
     fun pushMovie(movie: MovieInfo?) {
         loadPosters(mapOf("movieId" to movie!!.id.toString(), "type" to "cover"))
-        loadReviews(mapOf("movieId" to movie.id.toString(),))
+        loadReviews(mapOf("movieId" to movie.id.toString()))
+        loadReviewsCount(mapOf("movieId" to movie.id.toString()))
         loadAllProductionCompanies(mapOf("movies.id" to movie.id.toString(), "type" to "Производство"))
         _state.update { it.copy(isLoading = true) }
         _state.update { it.copy(movie = movie) }
         _state.update { it.copy(isLoading = false) }
     }
-
 }

@@ -11,6 +11,7 @@ import com.vvchn.avitotesttask.domain.usecases.GetMovieProductionCompaniesUseCas
 import com.vvchn.avitotesttask.domain.usecases.GetMoviesUseCase
 import com.vvchn.avitotesttask.domain.usecases.GetPostersUseCase
 import com.vvchn.avitotesttask.domain.usecases.GetReviewsByMovieIDUseCase
+import com.vvchn.avitotesttask.domain.usecases.GetReviewsCountUseCase
 import com.vvchn.avitotesttask.domain.usecases.SearchMoviesUseCase
 import dagger.Module
 import dagger.Provides
@@ -72,21 +73,32 @@ object AppModule {
     fun provideGetMovieProductionCompaniesUseCase(repository: KinopoiskRepository): GetMovieProductionCompaniesUseCase {
         return GetMovieProductionCompaniesUseCase(repository)
     }
+
+
     @Provides
     @Singleton
     fun provideGetMoviesUseCase(repository: KinopoiskRepository): GetMoviesUseCase {
         return GetMoviesUseCase(repository)
     }
+
     @Provides
     @Singleton
     fun provideGetPostersUseCase(repository: KinopoiskRepository): GetPostersUseCase {
         return GetPostersUseCase(repository)
     }
+
     @Provides
     @Singleton
     fun provideGetReviewsByMovieIDUseCase(repository: KinopoiskRepository): GetReviewsByMovieIDUseCase {
         return GetReviewsByMovieIDUseCase(repository)
     }
+
+    @Provides
+    @Singleton
+    fun provideGetReviewsCountUseCase(repository: KinopoiskRepository): GetReviewsCountUseCase {
+        return GetReviewsCountUseCase(repository)
+    }
+
     @Provides
     @Singleton
     fun provideSearchMoviesUseCase(repository: KinopoiskRepository): SearchMoviesUseCase {
