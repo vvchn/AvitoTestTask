@@ -22,4 +22,11 @@
     <string name="incorrectYearBounds">The year field value must be in the range from 1874 to 2050</string>
     <string name="leftAgeShouldBeLess">\"From\" Age should be less than \"To\"</string>
     <string name="incorrectAgeBounds">The ageRating field value must be in the range from 0 to 18</string>
+    <string name="noPosters">No posters</string>
+    <string name="noReviews">No reviews</string>
+    <string name="author">Author:</string>
+    <string name="date">Date:</string>
+    <string name="reviewTitle">Title:</string>
+    <string name="reviewType">Review type:</string>
+    <string name="production">Production:</string>
 </resources>

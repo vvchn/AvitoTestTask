@@ -55,6 +55,7 @@ internal fun MovieInfoDto.toMovieInfo(): MovieInfo {
         ageRating = ageRating,
         alternativeName = alternativeName,
         countries = countries?.map { countryDto -> countryDto.toCountry() },
+        description = description,
         genres = genres?.map { genresDto -> genresDto.toGenres() },
         id = id,
         movieLength = movieLength,

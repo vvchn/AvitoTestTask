@@ -332,7 +332,7 @@ fun FiltersBar(vm: MainScreenViewModel, navController: NavController) {
                 IconButton(onClick = { navController.popBackStack() }) {
                     Icon(
                         Icons.AutoMirrored.Default.ArrowBack,
-                        contentDescription = "backToFiltersList",
+                        contentDescription = "backToMainScreen",
                         tint = Color.White
                     )
                 }

@@ -17,4 +17,6 @@ object Dimens {
     val movieShortInfoSpacing = 7.dp
     val textFieldWidth = 90.dp
     val textFieldHeight = 60.dp
+
+    val movieInformationSize = 14.sp
 }

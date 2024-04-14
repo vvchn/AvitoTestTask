@@ -17,14 +17,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.geometry.RoundRect
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
@@ -77,13 +75,13 @@ fun MovieItem(
             }
             Row(horizontalArrangement = Arrangement.spacedBy(Dimens.movieShortInfoSpacing)) {
                 Text(
-                    text = "★" + String.format("%.1f", movieInfo?.ratingKP!!.kp),
+                    text = "★" + String.format("%.1f", movieInfo?.ratingKP?.kp ?: "0"),
                     textAlign = TextAlign.Left,
                     color = Color.Yellow,
                 )
                 Spacer(modifier = Modifier.widthIn(5.dp))
                 Text(
-                    text = movieInfo.year?.toString() ?: stringResource(R.string.unknown),
+                    text = movieInfo?.year?.toString() ?: stringResource(R.string.unknown),
                     textAlign = TextAlign.Left,
                     color = Color.White,
                 )

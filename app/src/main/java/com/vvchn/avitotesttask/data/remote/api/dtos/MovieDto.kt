@@ -14,6 +14,7 @@ data class MovieInfoDto(
     @SerializedName("ageRating") val ageRating: Int?,
     @SerializedName("alternativeName") val alternativeName: String?,
     @SerializedName("countries") val countries: List<CountryDto>?,
+    @SerializedName("description") val description: String?,
     @SerializedName("genres") val genres: List<GenresDto>?,
     @SerializedName("id") val id: Int?,
     @SerializedName("movieLength") val movieLength: Int?,

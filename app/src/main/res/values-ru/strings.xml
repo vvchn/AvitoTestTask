@@ -22,4 +22,11 @@
     <string name="incorrectYearBounds">Значение поля year должно быть в диапазоне от 1874 до 2050</string>
     <string name="leftAgeShouldBeLess">Возраст \"С\" должен быть меньше, чем \"До\"</string>
     <string name="incorrectAgeBounds">Значение поля ageRating должно быть в диапазоне от 0 до 18</string>
+    <string name="noPosters">Нет постеров</string>
+    <string name="noReviews">Нет отзывов</string>
+    <string name="author">Автор:</string>
+    <string name="date">Дата:</string>
+    <string name="reviewTitle">Заголовок:</string>
+    <string name="reviewType">Тип отзыва</string>
+    <string name="production">Производство</string>
 </resources>

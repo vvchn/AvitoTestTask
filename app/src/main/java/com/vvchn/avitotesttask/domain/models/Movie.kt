@@ -14,6 +14,7 @@ data class MovieInfo(
     val ageRating: Int?,
     val alternativeName: String?,
     val countries: List<Country>?,
+    val description: String?,
     val genres: List<Genres>?,
     val id: Int?,
     val movieLength: Int?,
