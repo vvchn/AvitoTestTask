@@ -1,7 +1,6 @@
 package com.vvchn.avitotesttask.presentation.moviedetailscreen
 
 import android.content.Context
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -70,7 +69,7 @@ import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.bumptech.glide.request.RequestOptions
 import com.vvchn.avitotesttask.R
-import com.vvchn.avitotesttask.domain.models.PersonInfo
+import com.vvchn.avitotesttask.domain.models.Persons
 import com.vvchn.avitotesttask.domain.models.PosterInfo
 import com.vvchn.avitotesttask.domain.models.ReviewInfo
 import com.vvchn.avitotesttask.presentation.Dimens
@@ -91,7 +90,6 @@ fun MovieDetailScreen(
 ) {
     val posters = vm.postersFlow.collectAsLazyPagingItems()
     val reviews = vm.reviewsFlow.collectAsLazyPagingItems()
-    val persons = vm.personsFlow.collectAsLazyPagingItems()
 
     val context = LocalContext.current
 
@@ -353,30 +351,25 @@ fun MovieDetailScreen(
                         color = Color.White
                     )
 
-                    if (persons.loadState.refresh is LoadState.Loading) {
+
+                    if (uiState.isMoviePersonsLoading) {
                         CircularProgressIndicator(
                             modifier = Modifier.align(Alignment.CenterHorizontally)
                         )
                     } else {
-                        if (persons.itemCount > 0) {
+                        if ((uiState.moviePersons?.size ?: 0) > 0) {
                             LazyRow(
                                 verticalAlignment = Alignment.CenterVertically,
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .height(height = 260.dp)
+                                    .heightIn(max = 350.dp)
                                     .padding(top = 20.dp, bottom = 20.dp)
                             ) {
                                 items(
-                                    count = persons.itemCount,
+                                    count = uiState.moviePersons?.size ?: 0,
                                     key = null,
-                                    contentType = persons.itemContentType { "Person" },
                                 ) { person ->
-                                    PersonItem(personInfo = persons[person], context = context)
-                                }
-                                item {
-                                    if (persons.loadState.append is LoadState.Loading) {
-                                        CircularProgressIndicator()
-                                    }
+                                    PersonItem(personInfo = uiState.moviePersons?.get(person), context = context)
                                 }
                             }
                         } else {
@@ -385,7 +378,7 @@ fun MovieDetailScreen(
                                     .fillMaxWidth()
                                     .height(180.dp)
                                     .wrapContentSize(Alignment.Center),
-                                text = stringResource(id = R.string.no_data),
+                                text = if(uiState.personsLoadingError != "") uiState.personsLoadingError else stringResource(id = R.string.no_data),
                                 color = Color.White,
                                 maxLines = 1,
                                 textAlign = TextAlign.Center,
@@ -479,16 +472,6 @@ fun MovieDetailScreen(
 
     }
 
-    LaunchedEffect(key1 = persons.loadState) {
-        if (persons.loadState.refresh is LoadState.Error) {
-            Toast.makeText(
-                context,
-                "Error: " + (persons.loadState.refresh as LoadState.Error).error.message,
-                Toast.LENGTH_LONG
-            ).show()
-        }
-    }
-
     LaunchedEffect(key1 = posters.loadState) {
         if (posters.loadState.refresh is LoadState.Error) {
             Toast.makeText(
@@ -530,15 +513,19 @@ private fun PosterImage(posterInfo: PosterInfo?) {
 
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
-private fun PersonItem(personInfo: PersonInfo?, context: Context) {
-    Column(modifier = Modifier.fillMaxHeight().widthIn(max = 140.dp).padding(horizontal = 10.dp)) {
+private fun PersonItem(personInfo: Persons?, context: Context) {
+    Column(modifier = Modifier
+        .fillMaxHeight()
+        .widthIn(max = 140.dp)
+        .padding(horizontal = 10.dp),
+        verticalArrangement = Arrangement.Center) {
         GlideImage(
             model = personInfo?.photo,
             contentDescription = "personPhoto",
             contentScale = ContentScale.Crop,
             modifier = Modifier
-                .heightIn(max = 140.dp)
-                .widthIn(max = 200.dp)
+                .height(140.dp)
+                .width(200.dp)
                 .clip(shape = MaterialTheme.shapes.small)
                 .padding(bottom = 5.dp)
         ) {
@@ -553,10 +540,17 @@ private fun PersonItem(personInfo: PersonInfo?, context: Context) {
             fontSize = 12.sp,
         )
         Text(
-            text = personInfo?.profession?.toString()?.replace("[", "")?.replace("]", "") ?: context.getString(R.string.unknown),
+            text = personInfo?.profession?.replace("[", "")?.replace("]", "") ?: context.getString(R.string.unknown),
             color = Color.White,
             textAlign = TextAlign.Center,
             fontSize = 10.sp,
+        )
+        Text(
+            text = personInfo?.description ?: context.getString(R.string.unknown),
+            color = Color.White,
+            textAlign = TextAlign.Center,
+            fontWeight = FontWeight.Bold,
+            fontSize = 12.sp,
         )
     }
 }

@@ -11,15 +11,17 @@ class GetMoviesUseCase @Inject constructor(
 ) {
     operator fun invoke(
         limit: Int,
-        countries: Array<String>?,
-        genres: Array<String>?,
-        queryParameters: Map<String, String>?,
+        year: String,
+        ageRating: String,
+        genresName: List<String>,
+        countriesName: List<String>,
     ): Flow<PagingData<MovieInfo>> {
         return repository.getMovies(
             limit = limit,
-            queryParameters = queryParameters,
-            countries = countries,
-            genres = genres,
+            year = year,
+            ageRating = ageRating,
+            genresName = genresName,
+            countriesName = countriesName,
         )
     }
 }

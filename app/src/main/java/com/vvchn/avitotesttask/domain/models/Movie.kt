@@ -16,6 +16,7 @@ data class MovieInfo(
     val genres: List<Genres>?,
     val id: Int?,
     val movieLength: Int?,
+    val persons: List<Persons>?,
     val name: String?,
     val moviePoster: MoviePoster?,
     val ratingKP: Rating?,
@@ -33,13 +34,20 @@ data class MoviePoster(
 )
 
 data class Country(
-    val name: String?,
+    val name: String,
 )
 
 data class Genres(
-    val name: String?,
+    val name: String,
 )
 
 data class Rating(
     val kp: Double?,
+)
+
+data class Persons(
+    val photo: String?,
+    val name: String?,
+    val description: String?,
+    val profession: String?,
 )

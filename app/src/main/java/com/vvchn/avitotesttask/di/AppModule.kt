@@ -19,7 +19,6 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
@@ -38,10 +37,7 @@ object AppModule {
             OkHttpClient().newBuilder()
                 .connectTimeout(30, TimeUnit.SECONDS)
                 .readTimeout(30, TimeUnit.SECONDS)
-                .addInterceptor(ApiKeyInterceptor(BuildConfig.API_KEY))
-                .addInterceptor(HttpLoggingInterceptor().apply {
-                    level = HttpLoggingInterceptor.Level.BODY
-                }).build()
+                .addInterceptor(ApiKeyInterceptor(BuildConfig.API_KEY)).build()
 
         return Retrofit.Builder()
             .baseUrl(BuildConfig.BASE_URL)
@@ -102,13 +98,13 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideGetPersonsCountUseCase(repository: KinopoiskRepository): GetMoviePersonsUseCase {
-        return GetMoviePersonsUseCase(repository)
+    fun provideSearchMoviesUseCase(repository: KinopoiskRepository): SearchMoviesUseCase {
+        return SearchMoviesUseCase(repository)
     }
 
     @Provides
     @Singleton
-    fun provideSearchMoviesUseCase(repository: KinopoiskRepository): SearchMoviesUseCase {
-        return SearchMoviesUseCase(repository)
+    fun provideGetMoviePersonsUseCase(repository: KinopoiskRepository): GetMoviePersonsUseCase {
+        return GetMoviePersonsUseCase(repository)
     }
 }

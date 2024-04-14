@@ -4,18 +4,19 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.vvchn.avitotesttask.data.remote.api.KinopoiskApi
+import com.vvchn.avitotesttask.data.remote.api.dtos.MovieDto
 import com.vvchn.avitotesttask.data.remote.common.toCountry
 import com.vvchn.avitotesttask.data.remote.common.toGenres
+import com.vvchn.avitotesttask.data.remote.common.toMovieInfo
+import com.vvchn.avitotesttask.data.remote.common.toMoviePersonsInfo
 import com.vvchn.avitotesttask.data.remote.common.toReview
 import com.vvchn.avitotesttask.data.remote.common.toStudio
 import com.vvchn.avitotesttask.data.remote.datasources.MoviesPagingSource
-import com.vvchn.avitotesttask.data.remote.datasources.PersonsPagingSource
 import com.vvchn.avitotesttask.data.remote.datasources.PostersPagingSource
 import com.vvchn.avitotesttask.data.remote.datasources.ReviewsPagingSource
 import com.vvchn.avitotesttask.domain.models.Country
 import com.vvchn.avitotesttask.domain.models.Genres
 import com.vvchn.avitotesttask.domain.models.MovieInfo
-import com.vvchn.avitotesttask.domain.models.PersonInfo
 import com.vvchn.avitotesttask.domain.models.PosterInfo
 import com.vvchn.avitotesttask.domain.models.Review
 import com.vvchn.avitotesttask.domain.models.ReviewInfo
@@ -28,6 +29,11 @@ import javax.inject.Inject
 class KinopoiskRepositoryImpl @Inject constructor(
     private val api: KinopoiskApi
 ) : KinopoiskRepository {
+
+    override suspend fun getMovieByID(id: Int): MovieInfo? {
+        return api.getMovieByID(id)?.toMoviePersonsInfo()
+    }
+
     override suspend fun getPossibleCountries(field: String): List<Country> {
         return api.getPossibleCountries(
             field = field,
@@ -42,13 +48,14 @@ class KinopoiskRepositoryImpl @Inject constructor(
 
     override fun getMovies(
         limit: Int,
-        countries: Array<String>?,
-        genres: Array<String>?,
-        queryParameters: Map<String, String>?,
+        year: String,
+        ageRating: String,
+        genresName: List<String>,
+        countriesName: List<String>,
     ): Flow<PagingData<MovieInfo>> = Pager(
         config = PagingConfig(pageSize = limit),
         pagingSourceFactory = {
-            MoviesPagingSource(api, query = null, queryParameters = queryParameters, countries = countries, genres = genres)
+            MoviesPagingSource(api, query = null, year, ageRating, genresName, countriesName)
         }
     ).flow
 
@@ -91,19 +98,6 @@ class KinopoiskRepositoryImpl @Inject constructor(
         config = PagingConfig(pageSize = limit),
         pagingSourceFactory = {
             PostersPagingSource(api, queryParameters)
-        }
-    ).flow
-
-    override fun getPersons(
-        limit: Int,
-        moviesId: String,
-        selectedFields: Array<String>?,
-        notNullFields: Array<String>?,
-        professionValue: Array<String>?
-    ): Flow<PagingData<PersonInfo>> = Pager(
-        config = PagingConfig(pageSize = limit),
-        pagingSourceFactory = {
-            PersonsPagingSource(api, moviesId, selectedFields, notNullFields, professionValue)
         }
     ).flow
 }

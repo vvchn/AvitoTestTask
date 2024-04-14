@@ -4,9 +4,8 @@ import com.vvchn.avitotesttask.data.remote.api.dtos.CountryDto
 import com.vvchn.avitotesttask.data.remote.api.dtos.GenresDto
 import com.vvchn.avitotesttask.data.remote.api.dtos.MovieInfoDto
 import com.vvchn.avitotesttask.data.remote.api.dtos.MoviePosterDto
-import com.vvchn.avitotesttask.data.remote.api.dtos.PersonInfoDto
+import com.vvchn.avitotesttask.data.remote.api.dtos.PersonsDto
 import com.vvchn.avitotesttask.data.remote.api.dtos.PosterInfoDto
-import com.vvchn.avitotesttask.data.remote.api.dtos.ProfessionDto
 import com.vvchn.avitotesttask.data.remote.api.dtos.RatingDto
 import com.vvchn.avitotesttask.data.remote.api.dtos.ReviewDto
 import com.vvchn.avitotesttask.data.remote.api.dtos.ReviewInfoDto
@@ -16,9 +15,8 @@ import com.vvchn.avitotesttask.domain.models.Country
 import com.vvchn.avitotesttask.domain.models.Genres
 import com.vvchn.avitotesttask.domain.models.MovieInfo
 import com.vvchn.avitotesttask.domain.models.MoviePoster
-import com.vvchn.avitotesttask.domain.models.PersonInfo
+import com.vvchn.avitotesttask.domain.models.Persons
 import com.vvchn.avitotesttask.domain.models.PosterInfo
-import com.vvchn.avitotesttask.domain.models.Profession
 import com.vvchn.avitotesttask.domain.models.Rating
 import com.vvchn.avitotesttask.domain.models.Review
 import com.vvchn.avitotesttask.domain.models.ReviewInfo
@@ -50,6 +48,37 @@ private fun RatingDto.toRating(): Rating {
     )
 }
 
+private fun PersonsDto.toPersons(): Persons {
+    return Persons(
+     photo = photo,
+     name = name,
+     description = description,
+     profession = profession,
+    )
+}
+
+internal fun MovieInfoDto.toMoviePersonsInfo(): MovieInfo {
+    return MovieInfo(
+        ageRating = null,
+        alternativeName = null,
+        countries = null,
+        description = null,
+        genres = null,
+        id = null,
+        movieLength = null,
+        name = null,
+        persons = persons?.map { personsDto -> personsDto.toPersons() },
+        moviePoster = null,
+        ratingKP = null,
+        ratingMpaa = null,
+        seriesLength = null,
+        shortDescription = null,
+        type = null,
+        typeNumber = null,
+        year = null,
+    )
+}
+
 internal fun MovieInfoDto.toMovieInfo(): MovieInfo {
     return MovieInfo(
         ageRating = ageRating,
@@ -60,6 +89,7 @@ internal fun MovieInfoDto.toMovieInfo(): MovieInfo {
         id = id,
         movieLength = movieLength,
         name = name,
+        persons = persons?.map { personsDto -> personsDto.toPersons() } ,
         moviePoster = moviePoster?.toMoviePoster(),
         ratingKP = ratingKP?.toRating(),
         ratingMpaa = ratingMpaa,
@@ -121,20 +151,5 @@ internal fun StudioDto.toStudio(): Studio {
         page = page,
         pages = pages,
         total = total,
-    )
-}
-
-internal fun ProfessionDto.toProfesstion(): Profession {
-    return Profession(
-        value = value
-    )
-}
-
-internal fun PersonInfoDto.toPersonInfo(): PersonInfo {
-    return PersonInfo(
-        id = id,
-        name = name,
-        photo = photo,
-        profession = profession?.map { professionDto -> professionDto.toProfesstion() },
     )
 }

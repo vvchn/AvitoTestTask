@@ -3,23 +3,30 @@ package com.vvchn.avitotesttask.data.remote.api
 import com.vvchn.avitotesttask.data.remote.api.dtos.CountryDto
 import com.vvchn.avitotesttask.data.remote.api.dtos.GenresDto
 import com.vvchn.avitotesttask.data.remote.api.dtos.MovieDto
-import com.vvchn.avitotesttask.data.remote.api.dtos.PersonDto
+import com.vvchn.avitotesttask.data.remote.api.dtos.MovieInfoDto
 import com.vvchn.avitotesttask.data.remote.api.dtos.PosterDto
 import com.vvchn.avitotesttask.data.remote.api.dtos.ReviewDto
 import com.vvchn.avitotesttask.data.remote.api.dtos.StudioDto
 import retrofit2.http.GET
+import retrofit2.http.Path
 import retrofit2.http.Query
 import retrofit2.http.QueryMap
 
 interface KinopoiskApi {
 
+    @GET("/v1.4/movie/{id}")
+    suspend fun getMovieByID(
+        @Path("id") id: Int,
+    ): MovieInfoDto?
+
     @GET("/v1.4/movie")
     suspend fun getMovies(
         @Query("page") page: Int,
         @Query("limit") limit: Int,
-        @Query("countries.name") countries: Array<String>?,
-        @Query("genres.name") genres: Array<String>?,
-        @QueryMap queryParameters: @JvmSuppressWildcards Map<String, String>?,
+        @Query("year") year: String,
+        @Query("ageRating") ageRating: String,
+        @Query("genres.name") genresName: List<String>,
+        @Query("countries.name") countriesName: List<String>,
     ): MovieDto
 
     @GET("/v1/movie/possible-values-by-field")
@@ -62,14 +69,4 @@ interface KinopoiskApi {
         @Query("limit") limit: Int,
         @QueryMap queryParameters: @JvmSuppressWildcards Map<String, String>?,
     ): PosterDto
-
-    @GET("/v1.4/person")
-    suspend fun getPersons(
-        @Query("page") page: Int,
-        @Query("limit") limit: Int,
-        @Query("movies.id") movieId: String?,
-        @Query("selectedFields") selectedFields: @JvmSuppressWildcards Array<String>?,
-        @Query("notNullFields") notNullFields: @JvmSuppressWildcards Array<String>?,
-        @Query("profession.value") professionValue: @JvmSuppressWildcards Array<String>?,
-    ): PersonDto
 }

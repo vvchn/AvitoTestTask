@@ -43,67 +43,63 @@ class MainScreenViewModel @Inject constructor(
         tryToLoadGenresList()
         mainScreenFlow = getMoviesUseCase(
             _state.value.screenLimit,
-            queryParameters = emptyMap(),
-            countries = null,
-            genres = null,
+            year = "",
+            ageRating = "",
+            countriesName = emptyList(),
+            genresName = emptyList(),
         ).cachedIn(viewModelScope).flowOn(Dispatchers.IO)
     }
 
-    fun getMovies(queryParameters: Map<String, String> = _state.value.queryParameters) {
+    fun getMovies(year: String = _state.value.year,
+                  ageRating: String = _state.value.ageRating,
+                  genresName: List<String> = _state.value.genresName,
+                  countriesName: List<String> = _state.value.countriesName) {
         mainScreenFlow =
             getMoviesUseCase(
                 _state.value.screenLimit,
-                queryParameters = queryParameters,
-                countries = _state.value.countries,
-                genres = _state.value.genres,
+                year = year,
+                ageRating = ageRating,
+                genresName = genresName,
+                countriesName = countriesName,
             ).cachedIn(viewModelScope).flowOn(Dispatchers.IO)
     }
 
     fun applyFilters() {
-        val queryParameters = mutableMapOf<String, String>()
-        var ageRating = ""
-        var year = ""
+        var ageRatingResult = ""
+        var yearResult = ""
         val countries: List<String> =
-            _state.value.possibleCountries.filter { it.isSelected }.map { it.country.name ?: "" }
+            _state.value.possibleCountries.filter { it.isSelected }.map { it.country.name }
         val genres: List<String> =
-            _state.value.possibleGenres.filter { it.isSelected }.map { it.genre.name ?: "" }
+            _state.value.possibleGenres.filter { it.isSelected }.map { it.genre.name }
 
         if (_state.value.yearLeftBound.isNotEmpty() || _state.value.yearRightBound.isNotEmpty()) {
-            year += _state.value.yearLeftBound.ifEmpty {
+            yearResult += _state.value.yearLeftBound.ifEmpty {
                 _state.value.yearMinimalLeftBound
             }
-            year += '-'
-            year += _state.value.yearRightBound.ifEmpty {
+            yearResult += '-'
+            yearResult += _state.value.yearRightBound.ifEmpty {
                 _state.value.yearMaximumRightBound
             }
-            queryParameters["year"] = year
+
+            _state.update { it.copy(year = yearResult) }
         }
 
         if (_state.value.ageRatingLeftBound.isNotEmpty() || _state.value.ageRatingRightBound.isNotEmpty()) {
-            ageRating += _state.value.ageRatingRightBound.ifEmpty {
+            ageRatingResult += _state.value.ageRatingRightBound.ifEmpty {
                 _state.value.ageRatingMaximumRightBound
             }
-            ageRating += '-'
-            ageRating += _state.value.ageRatingRightBound.ifEmpty {
+            ageRatingResult += '-'
+            ageRatingResult += _state.value.ageRatingRightBound.ifEmpty {
                 _state.value.ageRatingMaximumRightBound
             }
-            queryParameters["ageRating"] = year
+
+            _state.update { it.copy(ageRating = ageRatingResult) }
         }
 
 
-        if (countries.isNotEmpty()) {
-            _state.update { it.copy(countries = countries.toTypedArray()) }
-        }
+        _state.update { it.copy(countriesName = countries, genresName = genres) }
 
-        if (genres.isNotEmpty()) {
-            _state.update {
-                it.copy(genres = genres.toTypedArray())
-            }
-
-            _state.update {
-                it.copy(queryParameters = queryParameters)
-            }
-        }
+        getMovies(year = yearResult, ageRating = ageRatingResult, countriesName = countries ,genresName = genres)
     }
 
     fun tryToLoadGenresList() {

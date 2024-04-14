@@ -3,6 +3,8 @@ package com.vvchn.avitotesttask.data.remote.datasources
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.vvchn.avitotesttask.data.remote.api.KinopoiskApi
+import com.vvchn.avitotesttask.data.remote.common.defaultAgeRating
+import com.vvchn.avitotesttask.data.remote.common.defaultYear
 import com.vvchn.avitotesttask.data.remote.common.toMovieInfo
 import com.vvchn.avitotesttask.domain.models.MovieInfo
 import retrofit2.HttpException
@@ -12,9 +14,10 @@ import java.net.SocketTimeoutException
 class MoviesPagingSource (
     private val api: KinopoiskApi,
     private val query: String? = null,
-    private val countries: Array<String>? = null,
-    private val genres: Array<String>? = null,
-    private val queryParameters: Map<String, String>? = null,
+    private val year: String = "",
+    private val ageRating: String = "",
+    private val genresName: List<String> = emptyList(),
+    private val countriesName: List<String> = emptyList(),
 ) : PagingSource<Int, MovieInfo>() {
 
     override fun getRefreshKey(state: PagingState<Int, MovieInfo>): Int? {
@@ -30,7 +33,10 @@ class MoviesPagingSource (
 
         if (query == null) {
             return try {
-                val moviesResponse = api.getMovies(page = page, limit = limit, queryParameters = queryParameters, countries = countries, genres = genres)
+                val yearResponse = if (year == "") defaultYear else year
+                val ageRatingResponse = if (ageRating == "") defaultAgeRating else ageRating
+
+                val moviesResponse = api.getMovies(page = page, limit = limit, yearResponse, ageRatingResponse, genresName, countriesName)
 
                 val nextKey = if (moviesResponse.total == 0 || moviesResponse.page == moviesResponse.pages) null else page + 1
                 val prevKey = if (page == 1) null else page - 1

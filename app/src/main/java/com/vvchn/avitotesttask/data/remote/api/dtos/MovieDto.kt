@@ -19,6 +19,7 @@ data class MovieInfoDto(
     @SerializedName("id") val id: Int?,
     @SerializedName("movieLength") val movieLength: Int?,
     @SerializedName("name") val name: String?,
+    @SerializedName("persons") val persons: List<PersonsDto>?,
     @SerializedName("poster") val moviePoster: MoviePosterDto?,
     @SerializedName("rating") val ratingKP: RatingDto?,
     @SerializedName("ratingMpaa") val ratingMpaa: String?,
@@ -35,13 +36,20 @@ data class MoviePosterDto(
 )
 
 data class CountryDto(
-    @SerializedName("name") val name: String?,
+    @SerializedName("name") val name: String,
 )
 
 data class GenresDto(
-    @SerializedName("name") val name: String?,
+    @SerializedName("name") val name: String,
 )
 
 data class RatingDto(
     @SerializedName("kp") val kp: Double?,
+)
+
+data class PersonsDto(
+    @SerializedName("photo") val photo: String?,
+    @SerializedName("name") val name: String?,
+    @SerializedName("description") val description: String?,
+    @SerializedName("profession") val profession: String?,
 )
