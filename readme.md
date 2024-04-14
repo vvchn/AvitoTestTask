@@ -6,5 +6,5 @@
 3) Добавить в проекте в файл local.properties BASE_URL и API_KEY, где BASE_URL - корневая ссылка на API, а API_KEY - ключ авторизации для API
 ```Groovy
 API_KEY=ваш-ключ
-BASE_URL=корневая-ссылка-на-API
+BASE_URL=корневая-ссылка-на-API // (в данном случае - https://api.kinopoisk.dev/)
 ``` 
