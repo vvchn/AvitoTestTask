@@ -41,13 +41,14 @@ fun MovieItem(
     navController: NavController,
     movieInfo: MovieInfo?,
     context: Context,
-    movieDetailVM: MovieDetailScreenViewModel = hiltViewModel(),
+    movieDetailVM: MovieDetailScreenViewModel,
 ) {
     Box(
         modifier = Modifier
             .heightIn(Dimens.movieCardMaxHeight)
             .widthIn(Dimens.movieCardMaxWidth)
             .clickable {
+
                 movieDetailVM.pushMovie(movieInfo)
                 navController.navigate(Route.MovieDetailScreen.route)
             }

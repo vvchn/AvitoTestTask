@@ -39,12 +39,41 @@ class MainActivity : ComponentActivity() {
                     val mainScreenVM: MainScreenViewModel = hiltViewModel()
                     val movieDetailVM: MovieDetailScreenViewModel = hiltViewModel()
 
-                    NavHost(navController = navController, startDestination = Route.MainScreen.route) {
-                        composable(route = Route.MainScreen.route) { MainScreen(mainScreenVM = mainScreenVM, navController = navController,) }
-                        composable(route = Route.MovieDetailScreen.route) { MovieDetailScreen(navController = navController,) }
-                        composable(route = Route.Filters.route) { FiltersBar(vm = mainScreenVM, navController) }
-                        composable(route = Route.ChooseCountries.route) { ChooseCountries(vm = mainScreenVM, navController = navController) }
-                        composable(route = Route.ChooseGenres.route) { ChooseGenres(vm = mainScreenVM, navController = navController) }
+                    NavHost(
+                        navController = navController,
+                        startDestination = Route.MainScreen.route
+                    ) {
+                        composable(route = Route.MainScreen.route) {
+                            MainScreen(
+                                mainScreenVM = mainScreenVM,
+                                movieDetailScreenViewModel = movieDetailVM,
+                                navController = navController,
+                            )
+                        }
+                        composable(route = Route.MovieDetailScreen.route) {
+                            MovieDetailScreen(
+                                vm = movieDetailVM,
+                                navController = navController,
+                            )
+                        }
+                        composable(route = Route.Filters.route) {
+                            FiltersBar(
+                                vm = mainScreenVM,
+                                navController
+                            )
+                        }
+                        composable(route = Route.ChooseCountries.route) {
+                            ChooseCountries(
+                                vm = mainScreenVM,
+                                navController = navController
+                            )
+                        }
+                        composable(route = Route.ChooseGenres.route) {
+                            ChooseGenres(
+                                vm = mainScreenVM,
+                                navController = navController
+                            )
+                        }
                     }
                 }
             }

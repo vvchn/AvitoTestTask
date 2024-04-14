@@ -4,5 +4,5 @@ import com.vvchn.avitotesttask.domain.models.MovieInfo
 
 data class MovieDetailState (
     val movie: MovieInfo? = null,
-    val test: Int = 1
+    var isLoading: Boolean = true,
 )

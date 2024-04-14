@@ -51,6 +51,7 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemContentType
 import com.vvchn.avitotesttask.R
 import com.vvchn.avitotesttask.presentation.Dimens
+import com.vvchn.avitotesttask.presentation.moviedetailscreen.MovieDetailScreenViewModel
 import com.vvchn.avitotesttask.presentation.navgraph.Route
 import com.vvchn.avitotesttask.presentation.ui.theme.mainBackground
 import com.vvchn.avitotesttask.presentation.ui.theme.searchBarColor
@@ -65,6 +66,7 @@ fun MainScreen(
     modifier: Modifier = Modifier,
     navController: NavController,
     mainScreenVM: MainScreenViewModel,
+    movieDetailScreenViewModel: MovieDetailScreenViewModel
 ) {
 
     val uiState: MainScreenState by mainScreenVM.state.collectAsStateWithLifecycle()
@@ -175,7 +177,8 @@ fun MainScreen(
                             MovieItem(
                                 movieInfo = movies[movie],
                                 context = context,
-                                navController = navController
+                                navController = navController,
+                                movieDetailVM = movieDetailScreenViewModel,
                             )
                         }
                         item {

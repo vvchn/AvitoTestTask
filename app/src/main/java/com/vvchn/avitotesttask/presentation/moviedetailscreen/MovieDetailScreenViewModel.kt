@@ -24,7 +24,9 @@ class MovieDetailScreenViewModel @Inject constructor(
     val state: StateFlow<MovieDetailState> = _state.asStateFlow()
 
     fun pushMovie(movie: MovieInfo?) {
+        _state.update { it.copy(isLoading = true) }
         _state.update { it.copy(movie = movie) }
+        _state.update { it.copy(isLoading = false) }
     }
 
 }
