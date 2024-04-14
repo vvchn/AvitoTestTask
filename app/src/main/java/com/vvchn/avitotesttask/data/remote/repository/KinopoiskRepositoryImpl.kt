@@ -9,11 +9,13 @@ import com.vvchn.avitotesttask.data.remote.common.toGenres
 import com.vvchn.avitotesttask.data.remote.common.toReview
 import com.vvchn.avitotesttask.data.remote.common.toStudio
 import com.vvchn.avitotesttask.data.remote.datasources.MoviesPagingSource
+import com.vvchn.avitotesttask.data.remote.datasources.PersonsPagingSource
 import com.vvchn.avitotesttask.data.remote.datasources.PostersPagingSource
 import com.vvchn.avitotesttask.data.remote.datasources.ReviewsPagingSource
 import com.vvchn.avitotesttask.domain.models.Country
 import com.vvchn.avitotesttask.domain.models.Genres
 import com.vvchn.avitotesttask.domain.models.MovieInfo
+import com.vvchn.avitotesttask.domain.models.PersonInfo
 import com.vvchn.avitotesttask.domain.models.PosterInfo
 import com.vvchn.avitotesttask.domain.models.Review
 import com.vvchn.avitotesttask.domain.models.ReviewInfo
@@ -40,11 +42,13 @@ class KinopoiskRepositoryImpl @Inject constructor(
 
     override fun getMovies(
         limit: Int,
+        countries: Array<String>?,
+        genres: Array<String>?,
         queryParameters: Map<String, String>?,
     ): Flow<PagingData<MovieInfo>> = Pager(
         config = PagingConfig(pageSize = limit),
         pagingSourceFactory = {
-            MoviesPagingSource(api, query = null, queryParameters)
+            MoviesPagingSource(api, query = null, queryParameters = queryParameters, countries = countries, genres = genres)
         }
     ).flow
 
@@ -87,6 +91,19 @@ class KinopoiskRepositoryImpl @Inject constructor(
         config = PagingConfig(pageSize = limit),
         pagingSourceFactory = {
             PostersPagingSource(api, queryParameters)
+        }
+    ).flow
+
+    override fun getPersons(
+        limit: Int,
+        movieId: Array<String>,
+        selectedFields: Array<String>,
+        notNullFields: Array<String>,
+        professionValue: Array<String>
+    ): Flow<PagingData<PersonInfo>> = Pager(
+        config = PagingConfig(pageSize = limit),
+        pagingSourceFactory = {
+            PersonsPagingSource(api, movieId, selectedFields, notNullFields, professionValue)
         }
     ).flow
 }

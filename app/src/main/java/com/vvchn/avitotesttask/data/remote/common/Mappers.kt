@@ -2,11 +2,11 @@ package com.vvchn.avitotesttask.data.remote.common
 
 import com.vvchn.avitotesttask.data.remote.api.dtos.CountryDto
 import com.vvchn.avitotesttask.data.remote.api.dtos.GenresDto
-import com.vvchn.avitotesttask.data.remote.api.dtos.MovieDto
 import com.vvchn.avitotesttask.data.remote.api.dtos.MovieInfoDto
 import com.vvchn.avitotesttask.data.remote.api.dtos.MoviePosterDto
-import com.vvchn.avitotesttask.data.remote.api.dtos.PosterDto
+import com.vvchn.avitotesttask.data.remote.api.dtos.PersonInfoDto
 import com.vvchn.avitotesttask.data.remote.api.dtos.PosterInfoDto
+import com.vvchn.avitotesttask.data.remote.api.dtos.ProfessionDto
 import com.vvchn.avitotesttask.data.remote.api.dtos.RatingDto
 import com.vvchn.avitotesttask.data.remote.api.dtos.ReviewDto
 import com.vvchn.avitotesttask.data.remote.api.dtos.ReviewInfoDto
@@ -14,11 +14,11 @@ import com.vvchn.avitotesttask.data.remote.api.dtos.StudioDto
 import com.vvchn.avitotesttask.data.remote.api.dtos.StudioInfoDto
 import com.vvchn.avitotesttask.domain.models.Country
 import com.vvchn.avitotesttask.domain.models.Genres
-import com.vvchn.avitotesttask.domain.models.Movie
 import com.vvchn.avitotesttask.domain.models.MovieInfo
 import com.vvchn.avitotesttask.domain.models.MoviePoster
-import com.vvchn.avitotesttask.domain.models.Poster
+import com.vvchn.avitotesttask.domain.models.PersonInfo
 import com.vvchn.avitotesttask.domain.models.PosterInfo
+import com.vvchn.avitotesttask.domain.models.Profession
 import com.vvchn.avitotesttask.domain.models.Rating
 import com.vvchn.avitotesttask.domain.models.Review
 import com.vvchn.avitotesttask.domain.models.ReviewInfo
@@ -71,16 +71,6 @@ internal fun MovieInfoDto.toMovieInfo(): MovieInfo {
     )
 }
 
-internal fun MovieDto.toMovie(): Movie {
-    return Movie(
-        docs = docs.map { movieInfoDto -> movieInfoDto.toMovieInfo() },
-        limit = limit,
-        page = page,
-        pages = pages,
-        total = total,
-    )
-}
-
 internal fun PosterInfoDto.toPosterInfo(): PosterInfo {
     return PosterInfo(
         height = height,
@@ -88,18 +78,6 @@ internal fun PosterInfoDto.toPosterInfo(): PosterInfo {
         previewUrl = previewUrl,
         url = url,
         width = width,
-    )
-}
-
-internal fun PosterDto.toPoster(): Poster {
-    return Poster(
-        docs = docs.map { posterInfoDto ->
-            posterInfoDto.toPosterInfo()
-        },
-        limit = limit,
-        page = page,
-        pages = pages,
-        total = total,
     )
 }
 
@@ -143,5 +121,19 @@ internal fun StudioDto.toStudio(): Studio {
         page = page,
         pages = pages,
         total = total,
+    )
+}
+
+internal fun ProfessionDto.toProfesstion(): Profession {
+    return Profession(
+        value = value
+    )
+}
+
+internal fun PersonInfoDto.toActorInfo(): PersonInfo {
+    return PersonInfo(
+        name = name,
+        photo = photo,
+        profession = profession.map { professionDto -> professionDto.toProfesstion() },
     )
 }

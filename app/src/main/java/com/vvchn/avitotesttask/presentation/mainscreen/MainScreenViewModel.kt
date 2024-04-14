@@ -43,7 +43,9 @@ class MainScreenViewModel @Inject constructor(
         tryToLoadGenresList()
         mainScreenFlow = getMoviesUseCase(
             _state.value.screenLimit,
-            queryParameters = emptyMap()
+            queryParameters = emptyMap(),
+            countries = null,
+            genres = null,
         ).cachedIn(viewModelScope).flowOn(Dispatchers.IO)
     }
 
@@ -51,7 +53,9 @@ class MainScreenViewModel @Inject constructor(
         mainScreenFlow =
             getMoviesUseCase(
                 _state.value.screenLimit,
-                queryParameters = queryParameters
+                queryParameters = queryParameters,
+                countries = _state.value.countries,
+                genres = _state.value.genres,
             ).cachedIn(viewModelScope).flowOn(Dispatchers.IO)
     }
 
@@ -59,12 +63,10 @@ class MainScreenViewModel @Inject constructor(
         val queryParameters = mutableMapOf<String, String>()
         var ageRating = ""
         var year = ""
-        val countries: String =
+        val countries: List<String> =
             _state.value.possibleCountries.filter { it.isSelected }.map { it.country.name ?: "" }
-                .toString().replace("[", "").replace("]", "").replace(",", ", ")
-        val genres: String =
+        val genres: List<String> =
             _state.value.possibleGenres.filter { it.isSelected }.map { it.genre.name ?: "" }
-                .toString().replace("[", "").replace("]", "").replace(",", ", ")
 
         if (_state.value.yearLeftBound.isNotEmpty() || _state.value.yearRightBound.isNotEmpty()) {
             year += _state.value.yearLeftBound.ifEmpty {
@@ -85,21 +87,22 @@ class MainScreenViewModel @Inject constructor(
             ageRating += _state.value.ageRatingRightBound.ifEmpty {
                 _state.value.ageRatingMaximumRightBound
             }
-            queryParameters["ageRating"] = ageRating
+            queryParameters["ageRating"] = year
         }
 
 
         if (countries.isNotEmpty()) {
-            queryParameters["countries.name"] = countries
+            _state.update { it.copy(countries = countries.toTypedArray()) }
         }
 
         if (genres.isNotEmpty()) {
-            queryParameters["genres.name"] = genres
-        }
+            _state.update {
+                it.copy(genres = genres.toTypedArray())
+            }
 
-
-        _state.update {
-            it.copy(queryParameters = queryParameters)
+            _state.update {
+                it.copy(queryParameters = queryParameters)
+            }
         }
     }
 
@@ -352,4 +355,3 @@ class MainScreenViewModel @Inject constructor(
         return true
     }
 }
-

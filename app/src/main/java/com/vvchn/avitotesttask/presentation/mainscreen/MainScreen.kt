@@ -176,7 +176,6 @@ fun MainScreen(
                         { movie ->
                             MovieItem(
                                 movieInfo = movies[movie],
-                                context = context,
                                 navController = navController,
                                 movieDetailVM = movieDetailScreenViewModel,
                             )

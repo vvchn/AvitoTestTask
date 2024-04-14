@@ -38,7 +38,6 @@ import com.vvchn.avitotesttask.presentation.navgraph.Route
 fun MovieItem(
     navController: NavController,
     movieInfo: MovieInfo?,
-    context: Context,
     movieDetailVM: MovieDetailScreenViewModel,
 ) {
     Box(
@@ -64,7 +63,7 @@ fun MovieItem(
                 GlideImage(
                     model = movieInfo?.moviePoster?.previewUrl,
                     contentDescription = "moviePreview",
-                    contentScale = ContentScale.Fit,
+                    contentScale = ContentScale.FillBounds,
                     modifier = Modifier
                         .fillMaxSize()
                         .clip(shape = MaterialTheme.shapes.small)

@@ -12,6 +12,8 @@ import java.net.SocketTimeoutException
 class MoviesPagingSource (
     private val api: KinopoiskApi,
     private val query: String? = null,
+    private val countries: Array<String>? = null,
+    private val genres: Array<String>? = null,
     private val queryParameters: Map<String, String>? = null,
 ) : PagingSource<Int, MovieInfo>() {
 
@@ -28,7 +30,7 @@ class MoviesPagingSource (
 
         if (query == null) {
             return try {
-                val moviesResponse = api.getMovies(page = page, limit = limit, queryParameters = queryParameters)
+                val moviesResponse = api.getMovies(page = page, limit = limit, queryParameters = queryParameters, countries = countries, genres = genres)
 
                 val nextKey = if (moviesResponse.total == 0 || moviesResponse.page == moviesResponse.pages) null else page + 1
                 val prevKey = if (page == 1) null else page - 1

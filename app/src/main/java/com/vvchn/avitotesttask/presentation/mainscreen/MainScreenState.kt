@@ -19,6 +19,8 @@ data class MainScreenState(
     var isGenresLoading: Boolean = false,
     var invalidUserInputYearError: String = "",
     var invalidUserInputAgeRatingError: String = "",
+    var countries: Array<String>? = null,
+    var genres: Array<String>? = null,
     var possibleCountries: List<CountryUIState> = emptyList(),
     var possibleGenres: List<GenreUIState> = emptyList(),
     var queryParameters: MutableMap<String, String> = mutableMapOf(),

@@ -1,7 +1,5 @@
 package com.vvchn.avitotesttask.domain.models
 
-import com.google.gson.annotations.SerializedName
-
 data class Movie(
     val docs: List<MovieInfo>,
     val limit: Int,

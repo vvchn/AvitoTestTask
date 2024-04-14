@@ -7,6 +7,7 @@ import com.vvchn.avitotesttask.data.remote.repository.KinopoiskRepositoryImpl
 import com.vvchn.avitotesttask.domain.repository.KinopoiskRepository
 import com.vvchn.avitotesttask.domain.usecases.GetAllPossibleCountriesUseCase
 import com.vvchn.avitotesttask.domain.usecases.GetAllPossibleGenresUseCase
+import com.vvchn.avitotesttask.domain.usecases.GetMoviePersonsUseCase
 import com.vvchn.avitotesttask.domain.usecases.GetMovieProductionCompaniesUseCase
 import com.vvchn.avitotesttask.domain.usecases.GetMoviesUseCase
 import com.vvchn.avitotesttask.domain.usecases.GetPostersUseCase
@@ -97,6 +98,12 @@ object AppModule {
     @Singleton
     fun provideGetReviewsCountUseCase(repository: KinopoiskRepository): GetReviewsCountUseCase {
         return GetReviewsCountUseCase(repository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGetPersonsCountUseCase(repository: KinopoiskRepository): GetMoviePersonsUseCase {
+        return GetMoviePersonsUseCase(repository)
     }
 
     @Provides

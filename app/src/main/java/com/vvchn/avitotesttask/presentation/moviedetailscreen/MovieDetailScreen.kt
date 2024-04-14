@@ -68,6 +68,7 @@ import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.bumptech.glide.request.RequestOptions
 import com.vvchn.avitotesttask.R
+import com.vvchn.avitotesttask.domain.models.PersonInfo
 import com.vvchn.avitotesttask.domain.models.PosterInfo
 import com.vvchn.avitotesttask.domain.models.ReviewInfo
 import com.vvchn.avitotesttask.presentation.Dimens
@@ -88,6 +89,7 @@ fun MovieDetailScreen(
 ) {
     val posters = vm.postersFlow.collectAsLazyPagingItems()
     val reviews = vm.reviewsFlow.collectAsLazyPagingItems()
+    val persons = vm.personsFlow.collectAsLazyPagingItems()
 
     val context = LocalContext.current
 
@@ -314,6 +316,7 @@ fun MovieDetailScreen(
                         }
 
                     }
+
                     HorizontalDivider(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -349,11 +352,63 @@ fun MovieDetailScreen(
                         color = Color.White
                     )
 
+                    if (persons.loadState.refresh is LoadState.Loading) {
+                        CircularProgressIndicator(
+                            modifier = Modifier.align(Alignment.CenterHorizontally)
+                        )
+                    } else {
+                        if (persons.itemCount > 0) {
+                            LazyRow(
+                                verticalAlignment = Alignment.CenterVertically,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(height = 250.dp)
+                                    .padding(top = 20.dp, bottom = 20.dp)
+                            ) {
+                                items(
+                                    count = persons.itemCount,
+                                    key = null,
+                                    contentType = persons.itemContentType { "Person" },
+                                ) { person ->
+                                    PersonItem(personInfo = persons[person])
+                                }
+                                item {
+                                    if (persons.loadState.append is LoadState.Loading) {
+                                        CircularProgressIndicator()
+                                    }
+                                }
+                            }
+                        } else {
+                            Text(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(180.dp)
+                                    .wrapContentSize(Alignment.Center),
+                                text = stringResource(id = R.string.no_data),
+                                color = Color.White,
+                                maxLines = 1,
+                                textAlign = TextAlign.Center,
+                                fontSize = Dimens.nothingFoundTextSize,
+                                fontWeight = FontWeight.Bold,
+                            )
+                        }
+
+                    }
+
+                    HorizontalDivider(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(2.dp)
+                            .alpha(0.3f),
+                        color = Color.White
+                    )
+
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(10.dp)
-                            .height(50.dp),
+                            .height(50.dp)
+                            .horizontalScroll(rememberScrollState()),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
@@ -382,7 +437,6 @@ fun MovieDetailScreen(
                         if (reviews.itemCount > 0) {
                             LazyRow(
                                 verticalAlignment = Alignment.CenterVertically,
-                                //horizontalArrangement = Arrangement.SpaceEvenly,
                                 modifier = Modifier
                                     .fillMaxSize()
                                     .padding(top = 20.dp, bottom = 20.dp)
@@ -452,15 +506,45 @@ private fun PosterImage(posterInfo: PosterInfo?) {
     GlideImage(
         model = posterInfo?.previewUrl,
         contentDescription = "moviePreview",
-        contentScale = ContentScale.Fit,
+        contentScale = ContentScale.FillBounds,
         modifier = Modifier
-            .height(180.dp)
-            .width(200.dp)
+           /* .height(180.dp)
+            .width(200.dp)*/
             .clip(shape = MaterialTheme.shapes.small)
     ) {
         it.error(R.drawable.not_found).placeholder(R.drawable.placeholder_image)
             .apply(RequestOptions().fitCenter())
     }
+}
+
+@OptIn(ExperimentalGlideComposeApi::class)
+@Composable
+private fun PersonItem(personInfo: PersonInfo?) {
+    GlideImage(
+        model = personInfo?.photo,
+        contentDescription = "personPhoto",
+        contentScale = ContentScale.Crop,
+        modifier = Modifier
+            .height(180.dp)
+            .width(140.dp)
+            .clip(shape = MaterialTheme.shapes.small)
+            .padding(bottom = 5.dp)
+    ) {
+        it.error(R.drawable.not_found).placeholder(R.drawable.placeholder_image)
+            .apply(RequestOptions().fitCenter())
+    }
+    Text(
+        text = personInfo?.name ?: "",
+        color = Color.White,
+        fontWeight = FontWeight.Bold,
+        modifier = Modifier.padding(bottom = 4.dp)
+    )
+    Text(
+        text = personInfo?.profession.toString().replace("[", "").replace("]", ""),
+        color = Color.White,
+        fontWeight = FontWeight.Bold,
+        modifier = Modifier.padding(bottom = 4.dp)
+    )
 }
 
 @Composable

@@ -3,6 +3,7 @@ package com.vvchn.avitotesttask.data.remote.api
 import com.vvchn.avitotesttask.data.remote.api.dtos.CountryDto
 import com.vvchn.avitotesttask.data.remote.api.dtos.GenresDto
 import com.vvchn.avitotesttask.data.remote.api.dtos.MovieDto
+import com.vvchn.avitotesttask.data.remote.api.dtos.PersonDto
 import com.vvchn.avitotesttask.data.remote.api.dtos.PosterDto
 import com.vvchn.avitotesttask.data.remote.api.dtos.ReviewDto
 import com.vvchn.avitotesttask.data.remote.api.dtos.StudioDto
@@ -16,6 +17,8 @@ interface KinopoiskApi {
     suspend fun getMovies(
         @Query("page") page: Int,
         @Query("limit") limit: Int,
+        @Query("countries.name") countries: Array<String>?,
+        @Query("genres.name") genres: Array<String>?,
         @QueryMap queryParameters: @JvmSuppressWildcards Map<String, String>?,
     ): MovieDto
 
@@ -59,4 +62,14 @@ interface KinopoiskApi {
         @Query("limit") limit: Int,
         @QueryMap queryParameters: @JvmSuppressWildcards Map<String, String>?,
     ): PosterDto
+
+    @GET("/v1.4/person")
+    suspend fun getPersons(
+        @Query("page") page: Int,
+        @Query("limit") limit: Int,
+        @Query("movieId") movieId: @JvmSuppressWildcards Array<String>,
+        @Query("selectedFields") selectedFields: @JvmSuppressWildcards Array<String>,
+        @Query("notNullFields") notNullFields: @JvmSuppressWildcards Array<String>,
+        @Query("profession.value") professionValue: @JvmSuppressWildcards Array<String>,
+    ): PersonDto
 }

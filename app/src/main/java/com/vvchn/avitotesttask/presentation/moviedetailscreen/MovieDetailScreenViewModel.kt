@@ -5,8 +5,10 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.vvchn.avitotesttask.domain.models.MovieInfo
+import com.vvchn.avitotesttask.domain.models.PersonInfo
 import com.vvchn.avitotesttask.domain.models.PosterInfo
 import com.vvchn.avitotesttask.domain.models.ReviewInfo
+import com.vvchn.avitotesttask.domain.usecases.GetMoviePersonsUseCase
 import com.vvchn.avitotesttask.domain.usecases.GetMovieProductionCompaniesUseCase
 import com.vvchn.avitotesttask.domain.usecases.GetPostersUseCase
 import com.vvchn.avitotesttask.domain.usecases.GetReviewsByMovieIDUseCase
@@ -31,6 +33,7 @@ class MovieDetailScreenViewModel @Inject constructor(
     private val getReviewsByMovieIDUseCase: GetReviewsByMovieIDUseCase,
     private val getMovieProductionCompaniesUseCase: GetMovieProductionCompaniesUseCase,
     private val getReviewsCountUseCase: GetReviewsCountUseCase,
+    private val getMoviePersonsUseCase: GetMoviePersonsUseCase,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(MovieDetailScreenState())
@@ -38,12 +41,26 @@ class MovieDetailScreenViewModel @Inject constructor(
 
     var postersFlow: Flow<PagingData<PosterInfo>> = emptyFlow()
     var reviewsFlow: Flow<PagingData<ReviewInfo>> = emptyFlow()
+    var personsFlow: Flow<PagingData<PersonInfo>> = emptyFlow()
 
     private fun loadPosters(query: Map<String, String>) {
         postersFlow =
             getPostersUseCase(
                 _state.value.screenLimit,
                 queryParameters = query
+            ).cachedIn(viewModelScope).flowOn(Dispatchers.IO)
+    }
+
+    private fun loadPersons(
+        movieId: Array<String>,
+        selectedFields: Array<String>,
+        notNullFields: Array<String>,
+        professionValue: Array<String>,
+    ) {
+        personsFlow =
+            getMoviePersonsUseCase(
+                _state.value.screenLimit,
+                movieId, selectedFields, notNullFields, professionValue
             ).cachedIn(viewModelScope).flowOn(Dispatchers.IO)
     }
 
@@ -102,6 +119,7 @@ class MovieDetailScreenViewModel @Inject constructor(
             }
         }.flowOn(Dispatchers.IO).launchIn(viewModelScope)
     }
+
     private fun loadReviews(query: Map<String, String>) {
         reviewsFlow =
             getReviewsByMovieIDUseCase(
@@ -111,10 +129,22 @@ class MovieDetailScreenViewModel @Inject constructor(
     }
 
     fun pushMovie(movie: MovieInfo?) {
-        loadPosters(mapOf("movieId" to movie!!.id.toString(), "type" to "cover"))
-        loadReviews(mapOf("movieId" to movie.id.toString()))
-        loadReviewsCount(mapOf("movieId" to movie.id.toString()))
-        loadAllProductionCompanies(mapOf("movies.id" to movie.id.toString(), "type" to "Производство"))
+        val query: MutableMap<String, Array<String>> = mutableMapOf()
+        loadPosters(mapOf("movieId" to movie?.id.toString(), "type" to "cover"))
+        loadReviews(mapOf("movieId" to movie?.id.toString()))
+        loadReviewsCount(mapOf("movieId" to movie?.id.toString()))
+        val moviesId = arrayOf(movie?.id.toString())
+        val selectedFields = arrayOf("name", "photo", "profession")
+        val notNullFields = arrayOf("name")
+        val profession = arrayOf<String>()
+        loadPersons(moviesId, selectedFields,notNullFields,profession)
+
+        loadAllProductionCompanies(
+            mapOf(
+                "movies.id" to movie?.id.toString(),
+                "type" to "Производство"
+            )
+        )
         _state.update { it.copy(isLoading = true) }
         _state.update { it.copy(movie = movie) }
         _state.update { it.copy(isLoading = false) }
