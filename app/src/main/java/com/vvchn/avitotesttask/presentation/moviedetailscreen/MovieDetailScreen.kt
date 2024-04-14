@@ -19,6 +19,7 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.rememberScrollState
@@ -506,11 +507,12 @@ private fun PosterImage(posterInfo: PosterInfo?) {
     GlideImage(
         model = posterInfo?.previewUrl,
         contentDescription = "moviePreview",
-        contentScale = ContentScale.FillBounds,
+        contentScale = ContentScale.Crop,
         modifier = Modifier
-           /* .height(180.dp)
-            .width(200.dp)*/
+            .heightIn(max = 140.dp)
+            .widthIn(max = 200.dp)
             .clip(shape = MaterialTheme.shapes.small)
+            .padding(horizontal = 10.dp)
     ) {
         it.error(R.drawable.not_found).placeholder(R.drawable.placeholder_image)
             .apply(RequestOptions().fitCenter())

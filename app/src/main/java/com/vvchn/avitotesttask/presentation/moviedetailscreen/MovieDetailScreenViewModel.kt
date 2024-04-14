@@ -52,15 +52,15 @@ class MovieDetailScreenViewModel @Inject constructor(
     }
 
     private fun loadPersons(
-        movieId: Array<String>,
-        selectedFields: Array<String>,
-        notNullFields: Array<String>,
-        professionValue: Array<String>,
+        moviesId: String,
+        selectedFields: Array<String>?,
+        notNullFields: Array<String>?,
+        professionValue: Array<String>?,
     ) {
         personsFlow =
             getMoviePersonsUseCase(
                 _state.value.screenLimit,
-                movieId, selectedFields, notNullFields, professionValue
+                moviesId, selectedFields, notNullFields, professionValue
             ).cachedIn(viewModelScope).flowOn(Dispatchers.IO)
     }
 
@@ -133,10 +133,10 @@ class MovieDetailScreenViewModel @Inject constructor(
         loadPosters(mapOf("movieId" to movie?.id.toString(), "type" to "cover"))
         loadReviews(mapOf("movieId" to movie?.id.toString()))
         loadReviewsCount(mapOf("movieId" to movie?.id.toString()))
-        val moviesId = arrayOf(movie?.id.toString())
+        val moviesId = movie?.id.toString()
         val selectedFields = arrayOf("name", "photo", "profession")
         val notNullFields = arrayOf("name")
-        val profession = arrayOf<String>()
+        val profession: Array<String>? = arrayOf("Актер", "Актриса")
         loadPersons(moviesId, selectedFields,notNullFields,profession)
 
         loadAllProductionCompanies(

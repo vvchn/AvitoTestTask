@@ -12,10 +12,10 @@ import java.net.SocketTimeoutException
 
 class PersonsPagingSource (
     private val api: KinopoiskApi,
-    private val movieId: Array<String>,
-    private val selectedFields: Array<String>,
-    private val notNullFields: Array<String>,
-    private val professionValue:  Array<String>,
+    private val moviesId: String,
+    private val selectedFields: Array<String>?,
+    private val notNullFields: Array<String>?,
+    private val professionValue:  Array<String>?,
 ) : PagingSource<Int, PersonInfo>() {
 
     override fun getRefreshKey(state: PagingState<Int, PersonInfo>): Int? {
@@ -30,7 +30,7 @@ class PersonsPagingSource (
         val limit = params.loadSize
 
         return try {
-            val personsResponse = api.getPersons(page = page, limit = limit, movieId, selectedFields, notNullFields, professionValue)
+            val personsResponse = api.getPersons(page = page, limit = limit, moviesId, selectedFields, notNullFields, professionValue)
 
             val nextKey = if (personsResponse.total == 0 || personsResponse.page == personsResponse.pages) null else page + 1
             val prevKey = if (page == 1) null else page - 1

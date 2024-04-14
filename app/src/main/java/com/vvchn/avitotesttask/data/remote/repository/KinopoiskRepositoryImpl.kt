@@ -96,14 +96,14 @@ class KinopoiskRepositoryImpl @Inject constructor(
 
     override fun getPersons(
         limit: Int,
-        movieId: Array<String>,
-        selectedFields: Array<String>,
-        notNullFields: Array<String>,
-        professionValue: Array<String>
+        moviesId: String,
+        selectedFields: Array<String>?,
+        notNullFields: Array<String>?,
+        professionValue: Array<String>?
     ): Flow<PagingData<PersonInfo>> = Pager(
         config = PagingConfig(pageSize = limit),
         pagingSourceFactory = {
-            PersonsPagingSource(api, movieId, selectedFields, notNullFields, professionValue)
+            PersonsPagingSource(api, moviesId, selectedFields, notNullFields, professionValue)
         }
     ).flow
 }

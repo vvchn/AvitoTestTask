@@ -67,9 +67,9 @@ interface KinopoiskApi {
     suspend fun getPersons(
         @Query("page") page: Int,
         @Query("limit") limit: Int,
-        @Query("movieId") movieId: @JvmSuppressWildcards Array<String>,
-        @Query("selectedFields") selectedFields: @JvmSuppressWildcards Array<String>,
-        @Query("notNullFields") notNullFields: @JvmSuppressWildcards Array<String>,
-        @Query("profession.value") professionValue: @JvmSuppressWildcards Array<String>,
+        @Query("movies.id") movieId: String?,
+        @Query("selectedFields") selectedFields: @JvmSuppressWildcards Array<String>?,
+        @Query("notNullFields") notNullFields: @JvmSuppressWildcards Array<String>?,
+        @Query("profession.value") professionValue: @JvmSuppressWildcards Array<String>?,
     ): PersonDto
 }

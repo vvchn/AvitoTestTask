@@ -12,14 +12,14 @@ class GetMoviePersonsUseCase @Inject constructor(
 ) {
     operator fun invoke(
         limit: Int,
-        movieId: Array<String>,
-        selectedFields: Array<String>,
-        notNullFields: Array<String>,
-        professionValue:  Array<String>,
+        moviesId: String,
+        selectedFields: Array<String>?,
+        notNullFields: Array<String>?,
+        professionValue:  Array<String>?,
     ): Flow<PagingData<PersonInfo>> {
         return repository.getPersons(
             limit = limit,
-            movieId = movieId,
+            moviesId = moviesId,
             selectedFields = selectedFields,
             notNullFields = notNullFields,
             professionValue = professionValue,
