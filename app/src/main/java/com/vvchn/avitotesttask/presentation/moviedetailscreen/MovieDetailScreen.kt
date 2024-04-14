@@ -1,6 +1,7 @@
 package com.vvchn.avitotesttask.presentation.moviedetailscreen
 
 import android.content.Context
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -315,7 +316,6 @@ fun MovieDetailScreen(
                                 fontWeight = FontWeight.Bold,
                             )
                         }
-
                     }
 
                     HorizontalDivider(
@@ -363,7 +363,7 @@ fun MovieDetailScreen(
                                 verticalAlignment = Alignment.CenterVertically,
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .height(height = 250.dp)
+                                    .height(height = 260.dp)
                                     .padding(top = 20.dp, bottom = 20.dp)
                             ) {
                                 items(
@@ -371,7 +371,7 @@ fun MovieDetailScreen(
                                     key = null,
                                     contentType = persons.itemContentType { "Person" },
                                 ) { person ->
-                                    PersonItem(personInfo = persons[person])
+                                    PersonItem(personInfo = persons[person], context = context)
                                 }
                                 item {
                                     if (persons.loadState.append is LoadState.Loading) {
@@ -393,7 +393,6 @@ fun MovieDetailScreen(
                                 fontWeight = FontWeight.Bold,
                             )
                         }
-
                     }
 
                     HorizontalDivider(
@@ -480,6 +479,16 @@ fun MovieDetailScreen(
 
     }
 
+    LaunchedEffect(key1 = persons.loadState) {
+        if (persons.loadState.refresh is LoadState.Error) {
+            Toast.makeText(
+                context,
+                "Error: " + (persons.loadState.refresh as LoadState.Error).error.message,
+                Toast.LENGTH_LONG
+            ).show()
+        }
+    }
+
     LaunchedEffect(key1 = posters.loadState) {
         if (posters.loadState.refresh is LoadState.Error) {
             Toast.makeText(
@@ -521,32 +530,35 @@ private fun PosterImage(posterInfo: PosterInfo?) {
 
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
-private fun PersonItem(personInfo: PersonInfo?) {
-    GlideImage(
-        model = personInfo?.photo,
-        contentDescription = "personPhoto",
-        contentScale = ContentScale.Crop,
-        modifier = Modifier
-            .height(180.dp)
-            .width(140.dp)
-            .clip(shape = MaterialTheme.shapes.small)
-            .padding(bottom = 5.dp)
-    ) {
-        it.error(R.drawable.not_found).placeholder(R.drawable.placeholder_image)
-            .apply(RequestOptions().fitCenter())
+private fun PersonItem(personInfo: PersonInfo?, context: Context) {
+    Column(modifier = Modifier.fillMaxHeight().widthIn(max = 140.dp).padding(horizontal = 10.dp)) {
+        GlideImage(
+            model = personInfo?.photo,
+            contentDescription = "personPhoto",
+            contentScale = ContentScale.Crop,
+            modifier = Modifier
+                .heightIn(max = 140.dp)
+                .widthIn(max = 200.dp)
+                .clip(shape = MaterialTheme.shapes.small)
+                .padding(bottom = 5.dp)
+        ) {
+            it.error(R.drawable.not_found).placeholder(R.drawable.placeholder_image)
+                .apply(RequestOptions().fitCenter())
+        }
+        Text(
+            text = personInfo?.name ?: context.getString(R.string.unknown),
+            color = Color.White,
+            textAlign = TextAlign.Center,
+            fontWeight = FontWeight.Bold,
+            fontSize = 12.sp,
+        )
+        Text(
+            text = personInfo?.profession?.toString()?.replace("[", "")?.replace("]", "") ?: context.getString(R.string.unknown),
+            color = Color.White,
+            textAlign = TextAlign.Center,
+            fontSize = 10.sp,
+        )
     }
-    Text(
-        text = personInfo?.name ?: "",
-        color = Color.White,
-        fontWeight = FontWeight.Bold,
-        modifier = Modifier.padding(bottom = 4.dp)
-    )
-    Text(
-        text = personInfo?.profession.toString().replace("[", "").replace("]", ""),
-        color = Color.White,
-        fontWeight = FontWeight.Bold,
-        modifier = Modifier.padding(bottom = 4.dp)
-    )
 }
 
 @Composable

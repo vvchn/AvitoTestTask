@@ -3,10 +3,9 @@ package com.vvchn.avitotesttask.data.remote.datasources
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.vvchn.avitotesttask.data.remote.api.KinopoiskApi
-import com.vvchn.avitotesttask.data.remote.common.toActorInfo
+import com.vvchn.avitotesttask.data.remote.common.toPersonInfo
 import com.vvchn.avitotesttask.domain.models.PersonInfo
 import retrofit2.HttpException
-import retrofit2.http.Query
 import java.io.IOException
 import java.net.SocketTimeoutException
 
@@ -36,7 +35,7 @@ class PersonsPagingSource (
             val prevKey = if (page == 1) null else page - 1
 
             LoadResult.Page(
-                data = personsResponse.docs.map { personsInfoDto -> personsInfoDto.toActorInfo() },
+                data = personsResponse.docs.map { personsInfoDto -> personsInfoDto.toPersonInfo() },
                 nextKey = nextKey,
                 prevKey = prevKey
             )

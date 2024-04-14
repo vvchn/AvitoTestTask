@@ -9,11 +9,12 @@ data class Person(
 )
 
 data class PersonInfo(
-    val name: String,
+    val id: Int?,
+    val name: String?,
     val photo: String?,
-    val profession: List<Profession>
+    val profession: List<Profession>?
 )
 
 data class Profession(
-    val value: String,
+    val value: String?,
 )

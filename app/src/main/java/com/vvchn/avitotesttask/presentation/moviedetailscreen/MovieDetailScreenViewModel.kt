@@ -129,15 +129,14 @@ class MovieDetailScreenViewModel @Inject constructor(
     }
 
     fun pushMovie(movie: MovieInfo?) {
-        val query: MutableMap<String, Array<String>> = mutableMapOf()
-        loadPosters(mapOf("movieId" to movie?.id.toString(), "type" to "cover"))
-        loadReviews(mapOf("movieId" to movie?.id.toString()))
-        loadReviewsCount(mapOf("movieId" to movie?.id.toString()))
         val moviesId = movie?.id.toString()
         val selectedFields = arrayOf("name", "photo", "profession")
         val notNullFields = arrayOf("name")
         val profession: Array<String>? = arrayOf("Актер", "Актриса")
         loadPersons(moviesId, selectedFields,notNullFields,profession)
+        loadReviewsCount(mapOf("movieId" to movie?.id.toString()))
+        loadReviews(mapOf("movieId" to movie?.id.toString()))
+        loadPosters(mapOf("movieId" to movie?.id.toString(), "type" to "cover"))
 
         loadAllProductionCompanies(
             mapOf(
@@ -145,7 +144,6 @@ class MovieDetailScreenViewModel @Inject constructor(
                 "type" to "Производство"
             )
         )
-        _state.update { it.copy(isLoading = true) }
         _state.update { it.copy(movie = movie) }
         _state.update { it.copy(isLoading = false) }
     }

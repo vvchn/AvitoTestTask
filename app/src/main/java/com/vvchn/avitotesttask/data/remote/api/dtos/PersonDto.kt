@@ -11,11 +11,12 @@ data class PersonDto(
 )
 
 data class PersonInfoDto(
-   @SerializedName("name") val name: String,
-   @SerializedName("photo") val photo: String?,
-   @SerializedName("profession") val profession: List<ProfessionDto>
+    @SerializedName("id") val id: Int?,
+    @SerializedName("name") val name: String?,
+    @SerializedName("photo") val photo: String?,
+    @SerializedName("profession") val profession: List<ProfessionDto>?
 )
 
 data class ProfessionDto(
-    @SerializedName("value") val value: String,
+    @SerializedName("value") val value: String?,
 )

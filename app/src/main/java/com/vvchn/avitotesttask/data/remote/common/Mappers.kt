@@ -130,10 +130,11 @@ internal fun ProfessionDto.toProfesstion(): Profession {
     )
 }
 
-internal fun PersonInfoDto.toActorInfo(): PersonInfo {
+internal fun PersonInfoDto.toPersonInfo(): PersonInfo {
     return PersonInfo(
+        id = id,
         name = name,
         photo = photo,
-        profession = profession.map { professionDto -> professionDto.toProfesstion() },
+        profession = profession?.map { professionDto -> professionDto.toProfesstion() },
     )
 }
