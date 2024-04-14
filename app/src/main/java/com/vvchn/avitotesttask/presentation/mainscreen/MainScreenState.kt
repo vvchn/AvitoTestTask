@@ -7,8 +7,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 
 data class MainScreenState(
-    val ageMinimalLeftBound: Int = 0,
-    val ageMaximumRightBound: Int = 18,
+    val ageRatingMinimalLeftBound: Int = 0,
+    val ageRatingMaximumRightBound: Int = 18,
     var ageRatingLeftBound: String = "",
     var ageRatingRightBound: String = "",
     var ageValidationErrorCode: Int = 0,

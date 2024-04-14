@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -47,6 +48,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -310,6 +312,7 @@ fun FiltersBar(vm: MainScreenViewModel, navController: NavController) {
     var isYearSuccessfullyValidated: Boolean = true
     var isAgeRatingSuccessfullyValidated: Boolean = true
     val uiState by vm.state.collectAsStateWithLifecycle()
+    val focusManager = LocalFocusManager.current
 
     Surface(
         shape = RectangleShape,
@@ -369,6 +372,9 @@ fun FiltersBar(vm: MainScreenViewModel, navController: NavController) {
                     ),
                     onValueChange = vm::collectLeftBoundDate,
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                    keyboardActions = KeyboardActions(onDone = {
+                        focusManager.clearFocus()
+                    }),
                     label = { Text(text = stringResource(id = R.string.from)) },
                     maxLines = 1,
                     singleLine = true
@@ -388,6 +394,9 @@ fun FiltersBar(vm: MainScreenViewModel, navController: NavController) {
                     ),
                     onValueChange = vm::collectRightBoundDate,
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                    keyboardActions = KeyboardActions(onDone = {
+                        focusManager.clearFocus()
+                    }),
                     label = { Text(text = stringResource(id = R.string.to)) },
                     maxLines = 1,
                     singleLine = true
@@ -429,6 +438,9 @@ fun FiltersBar(vm: MainScreenViewModel, navController: NavController) {
                     ),
                     onValueChange = vm::collectAgeRatingLeftBound,
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                    keyboardActions = KeyboardActions(onDone = {
+                        focusManager.clearFocus()
+                    }),
                     label = { Text(text = stringResource(id = R.string.from)) },
                     maxLines = 1,
                     singleLine = true
@@ -448,6 +460,9 @@ fun FiltersBar(vm: MainScreenViewModel, navController: NavController) {
                     ),
                     onValueChange = vm::collectAgeRatingRightBound,
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                    keyboardActions = KeyboardActions(onDone = {
+                        focusManager.clearFocus()
+                    }),
                     label = { Text(text = stringResource(id = R.string.to)) },
                     maxLines = 1,
                     singleLine = true

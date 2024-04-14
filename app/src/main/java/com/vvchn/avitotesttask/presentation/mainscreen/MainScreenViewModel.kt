@@ -1,6 +1,5 @@
 package com.vvchn.avitotesttask.presentation.mainscreen
 
-import androidx.lifecycle.VIEW_MODEL_STORE_OWNER_KEY
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
@@ -15,12 +14,10 @@ import com.vvchn.avitotesttask.domain.usecases.GetMoviesUseCase
 import com.vvchn.avitotesttask.domain.usecases.SearchMoviesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.launchIn
@@ -60,12 +57,38 @@ class MainScreenViewModel @Inject constructor(
 
     fun applyFilters() {
         val queryParameters = mutableMapOf<String, String>()
+        var ageRating = ""
+        var year = ""
         val countries: String =
             _state.value.possibleCountries.filter { it.isSelected }.map { it.country.name ?: "" }
                 .toString().replace("[", "").replace("]", "").replace(",", ", ")
         val genres: String =
             _state.value.possibleGenres.filter { it.isSelected }.map { it.genre.name ?: "" }
                 .toString().replace("[", "").replace("]", "").replace(",", ", ")
+
+        if (_state.value.yearLeftBound.isNotEmpty() || _state.value.yearRightBound.isNotEmpty()) {
+            year += _state.value.yearLeftBound.ifEmpty {
+                _state.value.yearMinimalLeftBound
+            }
+            year += '-'
+            year += _state.value.yearRightBound.ifEmpty {
+                _state.value.yearMaximumRightBound
+            }
+            queryParameters["year"] = year
+        }
+
+        if (_state.value.ageRatingLeftBound.isNotEmpty() || _state.value.ageRatingRightBound.isNotEmpty()) {
+            ageRating += _state.value.ageRatingRightBound.ifEmpty {
+                _state.value.ageRatingMaximumRightBound
+            }
+            ageRating += '-'
+            ageRating += _state.value.ageRatingRightBound.ifEmpty {
+                _state.value.ageRatingMaximumRightBound
+            }
+            queryParameters["ageRating"] = ageRating
+        }
+
+
         if (countries.isNotEmpty()) {
             queryParameters["countries.name"] = countries
         }
@@ -305,14 +328,14 @@ class MainScreenViewModel @Inject constructor(
         }
 
         if (validateLeft) {
-            if (_state.value.ageRatingLeftBound.toInt() !in (_state.value.ageMinimalLeftBound.._state.value.ageMaximumRightBound)) {
+            if (_state.value.ageRatingLeftBound.toInt() !in (_state.value.ageRatingMinimalLeftBound.._state.value.ageRatingMaximumRightBound)) {
                 _state.update { it.copy(ageValidationErrorCode = R.string.incorrectAgeBounds) }
                 return false
             }
         }
 
         if (validateRight) {
-            if (_state.value.ageRatingRightBound.toInt() !in (_state.value.ageMinimalLeftBound.._state.value.ageMaximumRightBound)) {
+            if (_state.value.ageRatingRightBound.toInt() !in (_state.value.ageRatingMinimalLeftBound.._state.value.ageRatingMaximumRightBound)) {
                 _state.update { it.copy(ageValidationErrorCode = R.string.incorrectAgeBounds) }
                 return false
             }
