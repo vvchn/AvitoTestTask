@@ -3,14 +3,10 @@ package com.vvchn.avitotesttask.data.remote.api
 import com.vvchn.avitotesttask.data.remote.api.dtos.CountryDto
 import com.vvchn.avitotesttask.data.remote.api.dtos.GenresDto
 import com.vvchn.avitotesttask.data.remote.api.dtos.MovieDto
-import com.vvchn.avitotesttask.data.remote.api.dtos.MovieInfoDto
 import com.vvchn.avitotesttask.data.remote.api.dtos.PosterDto
 import com.vvchn.avitotesttask.data.remote.api.dtos.ReviewDto
 import com.vvchn.avitotesttask.data.remote.api.dtos.StudioDto
-import com.vvchn.avitotesttask.domain.models.MovieInfo
 import retrofit2.http.GET
-import retrofit2.http.Headers
-import retrofit2.http.Path
 import retrofit2.http.Query
 import retrofit2.http.QueryMap
 
@@ -49,8 +45,6 @@ interface KinopoiskApi {
 
     @GET("/v1.4/studio")
     suspend fun getMovieProductionCompanies(
-        @Query("page") page: Int,
-        @Query("limit") limit: Int,
         @QueryMap queryParameters: @JvmSuppressWildcards Map<String, String>?,
     ): StudioDto
 

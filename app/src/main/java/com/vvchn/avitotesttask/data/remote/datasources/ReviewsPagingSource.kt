@@ -26,13 +26,13 @@ class ReviewsPagingSource (
         val limit = params.loadSize
 
         return try {
-            val moviesResponse = api.getReviewsByMovieID(page = page, limit = limit, queryParameters = queryParameters)
+            val reviewResponse = api.getReviewsByMovieID(page = page, limit = limit, queryParameters = queryParameters)
 
-            val nextKey = if (moviesResponse.total == 0 || moviesResponse.page == moviesResponse.pages) null else page + 1
+            val nextKey = if (reviewResponse.total == 0 || reviewResponse.page == reviewResponse.pages) null else page + 1
             val prevKey = if (page == 1) null else page - 1
 
             LoadResult.Page(
-                data = moviesResponse.docs.map { reviewInfoDto -> reviewInfoDto.toReviewInfo() },
+                data = reviewResponse.docs.map { reviewInfoDto -> reviewInfoDto.toReviewInfo() },
                 nextKey = nextKey,
                 prevKey = prevKey
             )
