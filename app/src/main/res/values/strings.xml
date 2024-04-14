@@ -18,4 +18,8 @@
     <string name="apply">Apply</string>
     <string name="adjust">Adjust</string>
     <string name="genres">Genres</string>
+    <string name="leftYearShouldBeLess">\"From\" Year should be less than \"To\"</string>
+    <string name="incorrectYearBounds">The year field value must be in the range from 1874 to 2050</string>
+    <string name="leftAgeShouldBeLess">\"From\" Age should be less than \"To\"</string>
+    <string name="incorrectAgeBounds">The ageRating field value must be in the range from 0 to 18</string>
 </resources>

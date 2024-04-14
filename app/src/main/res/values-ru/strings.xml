@@ -18,4 +18,8 @@
     <string name="apply">Применить</string>
     <string name="adjust">Настроить</string>
     <string name="genres">Жанры</string>
+    <string name="leftYearShouldBeLess">Год \"С\" должен быть меньше, чем \"До\"</string>
+    <string name="incorrectYearBounds">Значение поля year должно быть в диапазоне от 1874 до 2050</string>
+    <string name="leftAgeShouldBeLess">Возраст \"С\" должен быть меньше, чем \"До\"</string>
+    <string name="incorrectAgeBounds">Значение поля ageRating должно быть в диапазоне от 0 до 18</string>
 </resources>

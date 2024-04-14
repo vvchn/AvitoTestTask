@@ -7,20 +7,28 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 
 data class MainScreenState(
-    var isCountriesLoading: Boolean = false,
-    var isGenresLoading: Boolean = false,
-    var error: String = "",
-    val screenLimit: Int = 10,
-    var queryParameters: MutableMap<String, String> = mutableMapOf(),
-    var userSearchInput: String = "",
-    var debounceJob: Job? = null,
-    val debounceScope: CoroutineScope = CoroutineScope(Dispatchers.Default),
-    var yearLeftBound: String = "",
-    var yearRightBound: String = "",
+    val ageMinimalLeftBound: Int = 0,
+    val ageMaximumRightBound: Int = 18,
     var ageRatingLeftBound: String = "",
     var ageRatingRightBound: String = "",
+    var ageValidationErrorCode: Int = 0,
+    var debounceJob: Job? = null,
+    val debounceScope: CoroutineScope = CoroutineScope(Dispatchers.Default),
+    var error: String = "",
+    var isCountriesLoading: Boolean = false,
+    var isGenresLoading: Boolean = false,
+    var invalidUserInputYearError: String = "",
+    var invalidUserInputAgeRatingError: String = "",
     var possibleCountries: List<CountryUIState> = emptyList(),
     var possibleGenres: List<GenreUIState> = emptyList(),
+    var queryParameters: MutableMap<String, String> = mutableMapOf(),
+    val screenLimit: Int = 10,
+    var userSearchInput: String = "",
+    var yearLeftBound: String = "",
+    var yearMinimalLeftBound: Int = 1874,
+    var yearMaximumRightBound: Int = 2050,
+    var yearRightBound: String = "",
+    var yearValidationErrorCode: Int = 0,
 )
 
 data class CountryUIState (

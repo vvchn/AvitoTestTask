@@ -1,11 +1,11 @@
 package com.vvchn.avitotesttask.presentation.mainscreen
 
-import android.util.Log
+import androidx.lifecycle.VIEW_MODEL_STORE_OWNER_KEY
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import androidx.paging.compose.collectAsLazyPagingItems
+import com.vvchn.avitotesttask.R
 import com.vvchn.avitotesttask.domain.models.Country
 import com.vvchn.avitotesttask.domain.models.Genres
 import com.vvchn.avitotesttask.domain.models.MovieInfo
@@ -15,19 +15,17 @@ import com.vvchn.avitotesttask.domain.usecases.GetMoviesUseCase
 import com.vvchn.avitotesttask.domain.usecases.SearchMoviesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.retry
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -75,6 +73,7 @@ class MainScreenViewModel @Inject constructor(
         if (genres.isNotEmpty()) {
             queryParameters["genres.name"] = genres
         }
+
 
         _state.update {
             it.copy(queryParameters = queryParameters)
@@ -172,7 +171,7 @@ class MainScreenViewModel @Inject constructor(
             } else {
                 str.takeLast(4)
             }
-            val filtered = cleaned.filter { it.isDigit() }
+            val filtered = cleaned.filter { it.isDigit() }.removeLeadingZeros()
             _state.update { it.copy(yearLeftBound = filtered) }
         }
     }
@@ -184,7 +183,7 @@ class MainScreenViewModel @Inject constructor(
             } else {
                 str.takeLast(4)
             }
-            val filtered = cleaned.filter { it.isDigit() }
+            val filtered = cleaned.filter { it.isDigit() }.removeLeadingZeros()
             _state.update { it.copy(yearRightBound = filtered) }
         }
     }
@@ -196,8 +195,12 @@ class MainScreenViewModel @Inject constructor(
             } else {
                 str.takeLast(2)
             }
-            val filtered = cleaned.filter { it.isDigit() }
-            _state.update { it.copy(ageRatingLeftBound = filtered) }
+            val filtered = cleaned.filter { it.isDigit() }.removeSecondAndFollowingZeros()
+            if (str.length == 2) {
+                _state.update { it.copy(ageRatingLeftBound = filtered.removeLeadingZeros()) }
+            } else {
+                _state.update { it.copy(ageRatingLeftBound = filtered) }
+            }
         }
     }
 
@@ -208,8 +211,12 @@ class MainScreenViewModel @Inject constructor(
             } else {
                 str.takeLast(2)
             }
-            val filtered = cleaned.filter { it.isDigit() }
-            _state.update { it.copy(ageRatingRightBound = filtered) }
+            val filtered = cleaned.filter { it.isDigit() }.removeSecondAndFollowingZeros()
+            if (str.length == 2) {
+                _state.update { it.copy(ageRatingRightBound = filtered.removeLeadingZeros()) }
+            } else {
+                _state.update { it.copy(ageRatingRightBound = filtered) }
+            }
         }
     }
 
@@ -239,6 +246,87 @@ class MainScreenViewModel @Inject constructor(
                 }
             })
         }
+    }
+
+    private fun String.removeSecondAndFollowingZeros(): String {
+        val firstZeroIndex = this.indexOf('0')
+        if (firstZeroIndex == -1) return this
+
+        val secondZeroIndex = this.indexOf('0', firstZeroIndex + 1)
+        if (secondZeroIndex == -1) return this
+
+        return this.take(secondZeroIndex) + this.dropWhile { it == '0' }.drop(1)
+    }
+
+    private fun String.removeLeadingZeros(): String {
+        return if (this.startsWith("0") && this != "0") this.dropWhile { it == '0' } else this
+    }
+
+    fun validateUserInputYear(): Boolean {
+        val validateLeft: Boolean = _state.value.yearLeftBound.isNotEmpty()
+        val validateRight: Boolean = _state.value.yearRightBound.isNotEmpty()
+
+        if (!validateLeft && !validateRight) {
+            _state.update { it.copy(yearValidationErrorCode = 0) }
+            return true
+        }
+
+        if (validateLeft) {
+            if (_state.value.yearLeftBound.toInt() !in (_state.value.yearMinimalLeftBound.._state.value.yearMaximumRightBound)) {
+                _state.update { it.copy(yearValidationErrorCode = R.string.incorrectYearBounds) }
+                return false
+            }
+        }
+
+        if (validateRight) {
+            if (_state.value.yearRightBound.toInt() !in (_state.value.yearMinimalLeftBound.._state.value.yearMaximumRightBound)) {
+                _state.update { it.copy(yearValidationErrorCode = R.string.incorrectYearBounds) }
+                return false
+            }
+        }
+
+        if (validateLeft && validateRight) {
+            if (_state.value.yearLeftBound.toInt() > _state.value.yearRightBound.toInt()) {
+                _state.update { it.copy(yearValidationErrorCode = R.string.leftYearShouldBeLess) }
+                return false
+            }
+        }
+
+        _state.update { it.copy(yearValidationErrorCode = 0) }
+        return true
+    }
+
+    fun validateUserInputAgeRating(): Boolean {
+        val validateLeft: Boolean = _state.value.ageRatingLeftBound.isNotEmpty()
+        val validateRight: Boolean = _state.value.ageRatingRightBound.isNotEmpty()
+
+        if (!validateLeft && !validateRight) {
+            return true
+        }
+
+        if (validateLeft) {
+            if (_state.value.ageRatingLeftBound.toInt() !in (_state.value.ageMinimalLeftBound.._state.value.ageMaximumRightBound)) {
+                _state.update { it.copy(ageValidationErrorCode = R.string.incorrectAgeBounds) }
+                return false
+            }
+        }
+
+        if (validateRight) {
+            if (_state.value.ageRatingRightBound.toInt() !in (_state.value.ageMinimalLeftBound.._state.value.ageMaximumRightBound)) {
+                _state.update { it.copy(ageValidationErrorCode = R.string.incorrectAgeBounds) }
+                return false
+            }
+        }
+
+        if (validateLeft && validateRight) {
+            if (_state.value.ageRatingLeftBound.toInt() > _state.value.ageRatingRightBound.toInt()) {
+                _state.update { it.copy(ageValidationErrorCode = R.string.leftAgeShouldBeLess) }
+                return false
+            }
+        }
+
+        _state.update { it.copy(ageValidationErrorCode = 0) }
+        return true
     }
 }
 

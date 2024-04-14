@@ -1,6 +1,7 @@
 package com.vvchn.avitotesttask.presentation.mainscreen
 
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -36,6 +37,7 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -44,6 +46,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -53,6 +56,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import androidx.paging.LoadState
 import com.vvchn.avitotesttask.R
 import com.vvchn.avitotesttask.presentation.Dimens
 import com.vvchn.avitotesttask.presentation.navgraph.Route
@@ -302,7 +306,9 @@ fun ChooseGenres(vm: MainScreenViewModel, navController: NavController) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FiltersBar(vm: MainScreenViewModel, navController: NavController) {
-
+    val context = LocalContext.current
+    var isYearSuccessfullyValidated: Boolean = true
+    var isAgeRatingSuccessfullyValidated: Boolean = true
     val uiState by vm.state.collectAsStateWithLifecycle()
 
     Surface(
@@ -355,7 +361,7 @@ fun FiltersBar(vm: MainScreenViewModel, navController: NavController) {
                         .height(Dimens.textFieldHeight),
                     value = uiState.yearLeftBound,
                     placeholder = {
-                        Text(text = "1800")
+                        Text(text = "1874")
                     },
                     colors = TextFieldDefaults.colors().copy(
                         unfocusedIndicatorColor = MaterialTheme.colorScheme.surfaceContainer,
@@ -374,7 +380,7 @@ fun FiltersBar(vm: MainScreenViewModel, navController: NavController) {
                         .height(Dimens.textFieldHeight),
                     value = uiState.yearRightBound,
                     placeholder = {
-                        Text(text = "2024")
+                        Text(text = "2050")
                     },
                     colors = TextFieldDefaults.colors().copy(
                         unfocusedIndicatorColor = MaterialTheme.colorScheme.surfaceContainer,
@@ -540,9 +546,16 @@ fun FiltersBar(vm: MainScreenViewModel, navController: NavController) {
             ) {
                 Button(
                     onClick = {
-                        vm.applyFilters()
-                        vm.getMovies()
-                        navController.popBackStack()
+                        isYearSuccessfullyValidated = vm.validateUserInputYear()
+                        isAgeRatingSuccessfullyValidated = vm.validateUserInputAgeRating()
+
+                        if (isYearSuccessfullyValidated) {
+                            if (isAgeRatingSuccessfullyValidated) {
+                                vm.applyFilters()
+                                vm.getMovies()
+                                navController.popBackStack()
+                            }
+                        }
                     },
                     modifier = Modifier
                         .width(235.dp)
@@ -557,6 +570,23 @@ fun FiltersBar(vm: MainScreenViewModel, navController: NavController) {
                         .height(30.dp)
                 )
             }
+        }
+    }
+
+    LaunchedEffect(key1 = uiState.yearValidationErrorCode, key2 = uiState.ageValidationErrorCode) {
+        if (uiState.yearValidationErrorCode != 0) {
+            Toast.makeText(
+                context,
+                context.getString(uiState.yearValidationErrorCode),
+                Toast.LENGTH_LONG
+            ).show()
+        }
+        if (uiState.ageValidationErrorCode != 0) {
+            Toast.makeText(
+                context,
+                context.getString(uiState.ageValidationErrorCode),
+                Toast.LENGTH_LONG
+            ).show()
         }
     }
 }
